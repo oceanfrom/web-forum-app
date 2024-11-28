@@ -16,7 +16,7 @@
     <p><strong>Likes:</strong> <span th:text="${topic.likes}"></span></p>
     <p><strong>Dislikes:</strong> <span th:text="${topic.dislikes}"></span></p>
     <p><strong>Created at:</strong> <span th:text="${#dates.format(topic.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></span></p>
-    <div th:if="${not loggedIn}">
+    <div th:if="${loggedIn}">
         <div class="buttons">
             <form method="post" style="display: inline;">
                 <button type="submit" name="action" value="like">Like</button>
