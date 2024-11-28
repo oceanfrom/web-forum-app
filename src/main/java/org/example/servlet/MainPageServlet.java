@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.model.Topic;
+import org.example.model.User;
 import org.example.service.TopicService;
 import org.example.utils.ThymeleafConfig;
 import org.thymeleaf.TemplateEngine;
@@ -20,16 +21,21 @@ public class MainPageServlet extends HttpServlet {
 
     @Override
     public void init() {
-        ThymeleafConfig config = new ThymeleafConfig();
-        templateEngine = config.createTemplateEngine();
+        templateEngine = ThymeleafConfig.getTemplateEngine();
         topicService = new TopicService();
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+
+        User user = (User) req.getSession().getAttribute("user");
+        Boolean loggedIn = (Boolean) req.getSession().getAttribute("loggedIn");
+
         List<Topic> topics = topicService.getAllTopics();
         Context context = new Context();
         context.setVariable("topics", topics);
+        context.setVariable("user", user);
+        context.setVariable("loggedIn", loggedIn);
         resp.setContentType("text/html");
         templateEngine.process("index", context, resp.getWriter());
     }

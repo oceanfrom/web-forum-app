@@ -19,8 +19,7 @@ public class TopicPageServlet extends HttpServlet {
 
     @Override
     public void init() {
-        ThymeleafConfig config = new ThymeleafConfig();
-        templateEngine = config.createTemplateEngine();
+        templateEngine = ThymeleafConfig.getTemplateEngine();
         topicService = new TopicService();
     }
 
