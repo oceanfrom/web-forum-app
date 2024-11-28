@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${topic.title}">Topic</title>
+</head>
+<body>
+<div class="header">
+    <h1 th:text="${topic.title}">Topic name</h1>
+</div>
+
+<div class="topic">
+    <h2 th:text="${topic.title}">Topic details</h2>
+    <p><strong>Category:</strong> <span th:text="${topic.category}"></span></p>
+    <p><strong>Content:</strong> <span th:text="${topic.content}"></span></p>
+    <p><strong>Likes:</strong> <span th:text="${topic.likes}"></span></p>
+    <p><strong>Dislikes:</strong> <span th:text="${topic.dislikes}"></span></p>
+    <p><strong>Created at:</strong> <span th:text="${#dates.format(topic.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></span></p>
+    <div th:if="${not loggedIn}">
+        <div class="buttons">
+            <form method="post" style="display: inline;">
+                <button type="submit" name="action" value="like">Like</button>
+            </form>
+
+            <form method="post" style="display: inline;">
+                <button type="submit" name="action" value="dislike">Dislike</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

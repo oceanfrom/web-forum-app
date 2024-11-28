@@ -19,6 +19,7 @@ public class Topic {
     @ManyToOne
     @JoinColumn(name = "created_by", nullable = false)
     private User createdBy;
+    @Column(name = "created_at")
     private Timestamp createdAt;
     private int likes;
     private int dislikes;

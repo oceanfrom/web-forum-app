@@ -16,4 +16,8 @@ public class TopicService {
             return topics;
         });
     }
+
+    public Topic getTopicById(Long id) {
+        return SessionManager.executeInTransaction(session -> session.get(Topic.class, id));
+    }
 }
