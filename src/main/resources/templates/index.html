@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Forum</title>
+
+</head>
+<body>
+<div class="header">
+    WEB FORUM
+</div>
+
+<div class="navbar">
+    <a th:if="${not loggedIn}" href="/register">Registration</a>
+    <a th:if="${not loggedIn}" href="/login">Login</a>
+    <a th:if="${loggedIn}" href="/notifications">Notifications</a>
+    <a th:if="${loggedIn}" href="/account">My account</a>
+</div>
+
+<div class="topics">
+    <h2>Topics</h2>
+    <p>Number of topics: <span th:text="${#lists.size(topics)}"></span></p>
+    <div th:if="${#lists.isEmpty(topics)}" class="no-topics">
+        <p>Topics have not been added yet</p>
+    </div>
+    <div th:each="topic : ${topics}">
+        <div class="topic">
+            <h3><a th:href="'/topic/' + ${topic.id}" th:text="${topic.title}">Тема</a></h3>
+            <p><strong>Author:</strong> <span th:text="${topic.createdBy.username}"></span></p>
+            <p><strong>Category:</strong> <span th:text="${topic.category}"></span></p>
+            <p><strong>Likes:</strong> <span th:text="${topic.likes}"></span></p>
+            <p><strong>Dislikes:</strong> <span th:text="${topic.dislikes}"></span></p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
