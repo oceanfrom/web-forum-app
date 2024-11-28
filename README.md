@@ -28,7 +28,9 @@ Database structure includes relationships between entities
    - Enable topic deletion by the author.
 #### 3. User dashboard - December 2, 2024
    - Add sections for "My Topics" and "Tracked Topics."
-   - Implement a delete button for the user's own topics.
+   - Change user info
+   - Added roles(user, admin)
+   - Admin func: delete topics, block users
 #### 4. Notifications - December 4, 2024
    - Implement logic for notifications about:
    - New likes on topics.
