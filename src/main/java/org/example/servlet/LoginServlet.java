@@ -26,6 +26,11 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        if (req.getSession().getAttribute("loggedIn") != null && (boolean) req.getSession().getAttribute("loggedIn")) {
+            resp.sendRedirect("/forum");
+            return;
+        }
+
         Context context = new Context();
         templateEngine.process("login", context, resp.getWriter());
     }
@@ -35,7 +40,7 @@ public class LoginServlet extends HttpServlet {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
         User user = userService.getUserByUsername(username);
-        if(user != null && user.getPassword().equals(password)) {
+        if (user != null && user.getPassword().equals(password)) {
             req.getSession().setAttribute("user", user);
             req.getSession().setAttribute("loggedIn", true);
             resp.sendRedirect("/forum");

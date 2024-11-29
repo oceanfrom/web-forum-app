@@ -7,8 +7,8 @@ import jakarta.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "topic_rating")
-public class TopicRating {
+@Table(name = "comment_rating")
+public class CommentRating{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -16,8 +16,8 @@ public class TopicRating {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
     @ManyToOne
-    @JoinColumn(name = "topic_id", nullable = false)
-    private Topic topic;
+    @JoinColumn(name = "comment_id", nullable = false)
+    private Comment comment;
     @Column(name = "like_dislike")
     private boolean like;
 

@@ -3,24 +3,27 @@ package org.example.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
 import java.sql.Timestamp;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "topics")
-public class Topic {
+@Table(name = "comments")
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String title;
     private String content;
-    private String category;
     @ManyToOne
     @JoinColumn(name = "created_by", nullable = false)
     private User createdBy;
-    @Column(name = "created_at")
+    @ManyToOne
+    @JoinColumn(name = "topic_id", nullable = false)
+    private Topic topic;
     private Timestamp createdAt;
     private int likes;
     private int dislikes;
+
+
 }

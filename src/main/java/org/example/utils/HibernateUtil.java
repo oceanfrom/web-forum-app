@@ -1,9 +1,7 @@
 package org.example.utils;
 
 import lombok.Getter;
-import org.example.model.Topic;
-import org.example.model.TopicRating;
-import org.example.model.User;
+import org.example.model.*;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
@@ -18,6 +16,8 @@ public class HibernateUtil {
                     .addAnnotatedClass(User.class)
                     .addAnnotatedClass(Topic.class)
                     .addAnnotatedClass(TopicRating.class)
+                    .addAnnotatedClass(Comment.class)
+                    .addAnnotatedClass(CommentRating.class)
                     .buildSessionFactory();
         } catch (Exception e) {
             e.printStackTrace();

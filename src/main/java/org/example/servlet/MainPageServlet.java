@@ -30,7 +30,6 @@ public class MainPageServlet extends HttpServlet {
 
         User user = (User) req.getSession().getAttribute("user");
         Boolean loggedIn = (Boolean) req.getSession().getAttribute("loggedIn");
-
         List<Topic> topics = topicService.getAllTopics();
         Context context = new Context();
         context.setVariable("topics", topics);
