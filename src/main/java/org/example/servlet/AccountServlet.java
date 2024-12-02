@@ -14,7 +14,7 @@ import org.example.validator.NameValidator;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import lombok.extern.slf4j.Slf4j;
-import service.UserService;
+import org.example.service.UserService;
 
 import java.io.IOException;
 import java.util.List;

@@ -1,4 +1,12 @@
 package org.example;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class App {
+    public static void main(String[] args) {
+        log.info("Hello World!");
+        log.warn("Hello World!");
+        log.error("Hello World!");
+    }
 }

@@ -1,4 +1,4 @@
-package service;
+package org.example.service;
 
 import org.example.dao.CommentDAO;
 import org.example.model.Comment;

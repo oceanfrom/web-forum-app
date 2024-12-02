@@ -1,4 +1,4 @@
-package service;
+package org.example.service;
 
 import org.example.dao.TopicDAO;
 import org.example.model.Topic;

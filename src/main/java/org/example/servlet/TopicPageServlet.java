@@ -15,7 +15,7 @@ import org.example.dao.TopicDAO;
 import org.example.config.ThymeleafConfig;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import service.TopicService;
+import org.example.service.TopicService;
 import java.io.IOException;
 import java.util.List;
 

@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.example.model.User;
 import org.example.dao.CommentDAO;
-import service.CommentService;
+import org.example.service.CommentService;
 
 import java.io.IOException;
 
