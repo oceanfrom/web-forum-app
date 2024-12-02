@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ecf0f1;
+            color: #34495e;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .buttons {
+            margin-top: 30px;
+        }
+
+        .buttons a,
+        .buttons button {
+            background-color: #3498db;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            margin: 10px;
+        }
+
+        .buttons a:hover,
+        .buttons button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .buttons a:disabled,
+        .buttons button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .welcome-message {
+            font-size: 22px;
+            color: #2c3e50;
+            margin-bottom: 40px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="header">
+    Welcome
+</div>
+<div class="welcome-message">
+    <p>Join the conversation, ask questions, and share your thoughts</p>
+    <p>Click the button below to enter the forum</p>
+</div>
+<div class="buttons">
+    <a href="/forum">Go to Forum</a>
+</div>
+</body>
+</html>

@@ -14,8 +14,11 @@ public class Topic {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
+    @Column(name = "content", length = 10000)
     private String content;
-    private String category;
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
     @ManyToOne
     @JoinColumn(name = "created_by", nullable = false)
     private User createdBy;

@@ -1,14 +1,12 @@
-package org.example.utils.impl;
+package org.example.transaction;
 
-import org.example.utils.HibernateUtil;
-import org.example.utils.SessionCallBackVoid;
-import org.example.utils.SessionCallback;
+import org.example.config.HibernateConfig;
 import org.hibernate.Session;
 
 public class SessionManager {
 
     public static <T> T executeInTransaction(SessionCallback<T> callback) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
+        Session session = HibernateConfig.getSessionFactory().openSession();
         session.beginTransaction();
         T result = null;
 
@@ -25,7 +23,7 @@ public class SessionManager {
     }
 
     public static void executeInTransactionWithoutReturn(SessionCallBackVoid callback) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
+        Session session = HibernateConfig.getSessionFactory().openSession();
         session.beginTransaction();
         try {
             callback.doInSession(session);

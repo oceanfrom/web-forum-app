@@ -1,53 +1,24 @@
-package org.example.service;
+package service;
 
-import org.example.model.*;
-import org.example.utils.impl.SessionManager;
+import org.example.dao.CommentDAO;
+import org.example.model.Comment;
+import org.example.model.CommentRating;
+import org.example.model.User;
+import org.example.transaction.SessionManager;
 import org.hibernate.Session;
-import org.hibernate.query.Query;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.List;
 
-public class CommentSerivce {
-
-    public Comment addComment(Long topicId, String content, User user) {
-        return SessionManager.executeInTransaction(session -> {
-            Topic topic = session.get(Topic.class, topicId);
-            Comment comment = new Comment();
-            comment.setContent(content);
-            comment.setTopic(topic);
-            comment.setCreatedBy(user);
-            comment.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
-            session.save(comment);
-            return comment;
-        });
-    }
-
-    public List<Comment> getCommentsByTopicId(Long topicId) {
-        return SessionManager.executeInTransaction(session -> {
-            Query<Comment> query = session.createQuery("from Comment where topic.id = :topicId", Comment.class);
-            query.setParameter("topicId", topicId);
-            return query.getResultList();
-        });
-    }
+public class CommentService {
+    private CommentDAO commentDAO = new CommentDAO();
 
     public void updateRating(Long commentId, User user, boolean isLike) {
         SessionManager.executeInTransactionWithoutReturn(session -> {
             Comment comment = session.get(Comment.class, commentId);
-            CommentRating existingRating = existingRating(session, commentId, user.getId());
+            CommentRating existingRating = commentDAO.existingRating(session, commentId, user.getId());
             if (existingRating != null)
                 processExistingRating(session, comment, existingRating, isLike);
             else
                 addNewRating(session, comment, user, isLike);
         });
-    }
-
-    public CommentRating existingRating(Session session, Long commentId, Long userId) {
-        Query<CommentRating> query = session.createQuery(
-                "FROM CommentRating c WHERE c.user.id = :userId AND c.comment.id = :commentId ", CommentRating.class);
-        query.setParameter("userId", userId);
-        query.setParameter("commentId", commentId);
-        return query.uniqueResultOptional().orElse(null);
     }
 
     private void changeCommentRating(Comment comment, int like, int dislike) {
@@ -84,4 +55,3 @@ public class CommentSerivce {
             changeCommentRating(comment, 0, 1);
     }
 }
-

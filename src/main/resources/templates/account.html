@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Account</title>
+</head>
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f5f5f5;
+        color: #444;
+    }
+
+    h1 {
+        font-size: 32px;
+        color: #2c3e50;
+        text-align: center;
+        margin-top: 30px;
+    }
+
+    h2 {
+        font-size: 22px;
+        color: #2c3e50;
+        margin-top: 30px;
+    }
+
+    form {
+        background-color: white;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    form p {
+        margin-bottom: 15px;
+    }
+
+    label {
+        font-size: 16px;
+        font-weight: bold;
+        color: #2c3e50;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="email"] {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        margin-top: 5px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    button {
+        background-color: #3498db;
+        color: white;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        margin-top: 10px;
+    }
+
+    button:hover {
+        background-color: #2980b9;
+    }
+
+    details {
+        margin-top: 20px;
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    ul li {
+        margin-bottom: 10px;
+    }
+
+    ul li a {
+        color: #3498db;
+        text-decoration: none;
+    }
+
+    ul li a:hover {
+        color: #2980b9;
+    }
+
+</style>
+<body>
+<h1>My Account</h1>
+<div>
+    <h2>User Information</h2>
+    <details>
+        <summary>Click to view/update your information</summary>
+        <form action="/account/update-username" method="post">
+            <p>
+                <label for="username">Name:</label>
+                <input type="text" id="username" name="username" th:value="${user.username}" required/>
+            </p>
+            <button type="submit">Update Name</button>
+        </form>
+        <form action="/account/update-password" method="post">
+            <p>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required minlength="6"/>
+            </p>
+            <button type="submit">Update Password</button>
+        </form>
+        <form action="/account/update-email" method="post">
+            <p>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" th:value="${user.email}" required/>
+            </p>
+            <button type="submit">Update Email</button>
+        </form>
+        <div th:if="${errorMessage != null}">
+            <p style="color: red;" th:text="${errorMessage}"></p>
+        </div>
+    </details>
+</div>
+<div>
+    <h2>Topics created by you</h2>
+    <ul>
+        <li th:each="topic : ${createdTopics}">
+            <a th:href="'/topic/' + ${topic.id}" th:text="${topic.title}">Topic Title</a>
+        </li>
+    </ul>
+    <p th:if="${#lists.isEmpty(createdTopics)}">You haven't created any topics yet.</p>
+</div>
+<div>
+    <h2>Topics you liked</h2>
+    <ul>
+        <li th:each="topic : ${likedTopics}">
+            <a th:href="'/topic/' + ${topic.id}" th:text="${topic.title}">Topic Title</a>
+        </li>
+    </ul>
+    <p th:if="${#lists.isEmpty(likedTopics)}">You haven't liked any topics yet.</p>
+</div>
+</body>
+</html>

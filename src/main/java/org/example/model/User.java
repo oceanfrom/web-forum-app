@@ -3,7 +3,7 @@ package org.example.model;
 import lombok.Getter;
 import lombok.Setter;
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 @Getter
 @Setter
@@ -17,7 +17,5 @@ public class User {
     private String password;
     private String email;
     @Column(name = "registration_date")
-    private LocalDateTime registrationDate;
-
-
+    private Timestamp registrationDate;
 }

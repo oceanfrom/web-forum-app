@@ -1,11 +1,11 @@
-package org.example.utils;
+package org.example.config;
 
 import lombok.Getter;
 import org.example.model.*;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-public class HibernateUtil {
+public class HibernateConfig {
 
     @Getter
     private static SessionFactory sessionFactory;
@@ -18,6 +18,7 @@ public class HibernateUtil {
                     .addAnnotatedClass(TopicRating.class)
                     .addAnnotatedClass(Comment.class)
                     .addAnnotatedClass(CommentRating.class)
+                    .addAnnotatedClass(Category.class)
                     .buildSessionFactory();
         } catch (Exception e) {
             e.printStackTrace();

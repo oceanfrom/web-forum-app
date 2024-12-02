@@ -2,39 +2,201 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Forum</title>
+    <title>Create Topic - Forum</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #444;
+        }
 
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .navbar {
+            background-color: #34495e;
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+        }
+
+        .navbar a {
+            color: white;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+
+        .navbar a:hover {
+            background-color: #1abc9c;
+        }
+
+        .create-topic-form {
+            width: 50%;
+            margin: 40px auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            text-align: center;
+        }
+
+        .create-topic-form h2 {
+            font-size: 26px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .create-topic-form label {
+            font-size: 18px;
+            color: #3498db;
+            cursor: pointer;
+        }
+
+        .create-topic-form input, .create-topic-form textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .create-topic-form input:focus, .create-topic-form textarea:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+
+        .create-topic-form button {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .create-topic-form button:hover {
+            background-color: #2980b9;
+        }
+
+        .topics {
+            width: 85%;
+            max-width: 1200px;
+            margin: 40px auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        .topics h2 {
+            font-size: 26px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .topic {
+            background-color: #ffffff;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .topic:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .topic h3 {
+            font-size: 24px;
+            color: #3498db;
+            margin-top: 0;
+        }
+
+        .topic p {
+            font-size: 16px;
+            color: #555;
+        }
+
+        .topic a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .topic a:hover {
+            color: #2980b9;
+        }
+
+        .no-topics {
+            text-align: center;
+            font-size: 18px;
+            margin-top: 30px;
+            color: #888;
+        }
+    </style>
 </head>
 <body>
 <div class="header">
     WEB FORUM
 </div>
-
 <div class="navbar">
     <a th:if="${not loggedIn}" href="/register">Registration</a>
     <a th:if="${not loggedIn}" href="/login">Login</a>
+    <a th:if="${loggedIn}" href="/users">Users</a>
     <a th:if="${loggedIn}" href="/notifications">Notifications</a>
     <a th:if="${loggedIn}" href="/account">My account</a>
     <a th:if="${loggedIn}" href="/logout">Logout</a>
-
 </div>
-
+<div th:if="${loggedIn}" class="create-topic-form">
+    <details>
+        <summary>Create new topic</summary>
+    <h2>Create a New Topic</h2>
+    <form action="/topic" method="post">
+        <input type="text" name="title" placeholder="Topic Name" required />
+        <textarea name="description" placeholder="Topic Description" rows="5" required></textarea>
+        <select name="categoryIdStr" required>
+            <th:block th:each="category : ${categories}">
+                <option th:value="${category.id}" th:text="${category.name}"></option>
+            </th:block>
+        </select>
+        <button type="submit" name="action" value="create">Create Topic</button>
+    </form>
+    </details>
+</div>
 <div class="topics">
     <h2>Topics</h2>
-    <p>Number of topics: <span th:text="${#lists.size(topics)}"></span></p>
     <div th:if="${#lists.isEmpty(topics)}" class="no-topics">
-        <p>Topics have not been added yet</p>
+        <p>No topics have been added yet.</p>
     </div>
     <div th:each="topic : ${topics}">
         <div class="topic">
-            <h3><a th:href="'/topic/' + ${topic.id}" th:text="${topic.title}">Тема</a></h3>
-            <p><strong>Author:</strong> <span th:text="${topic.createdBy.username}"></span></p>
-            <p><strong>Category:</strong> <span th:text="${topic.category}"></span></p>
+            <h3><a th:href="'/topic/' + ${topic.id}" th:text="${topic.title}">Topic Title</a></h3>
+            <p><strong>
+               Author: <a th:href="'/profile/' + ${topic.createdBy.id}" th:text="${topic.createdBy.username}"></a>:
+            </strong></p>
+            <p><strong>Category:</strong> <span th:text="${topic.category.name}"></span></p>
+            <p><strong>Created at:</strong> <span th:text="${#dates.format(topic.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></span></p>
             <p><strong>Likes:</strong> <span th:text="${topic.likes}"></span></p>
             <p><strong>Dislikes:</strong> <span th:text="${topic.dislikes}"></span></p>
         </div>
     </div>
 </div>
-
 </body>
 </html>

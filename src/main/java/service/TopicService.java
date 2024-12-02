@@ -1,47 +1,24 @@
-package org.example.service;
+package service;
 
+import org.example.dao.TopicDAO;
 import org.example.model.Topic;
 import org.example.model.TopicRating;
 import org.example.model.User;
-import org.example.utils.impl.SessionManager;
+import org.example.transaction.SessionManager;
 import org.hibernate.Session;
-import org.hibernate.query.Query;
-
-import java.util.List;
 
 public class TopicService {
-    public List<Topic> getAllTopics() {
-        return SessionManager.executeInTransaction(session -> {
-            Query<Topic> query = session.createQuery(
-                    "SELECT t FROM Topic t " +
-                            "LEFT JOIN FETCH t.createdBy ", Topic.class);
-            List<Topic> topics = query.getResultList();
-            return topics;
-        });
-    }
-
-    public Topic getTopicById(Long id) {
-        return SessionManager.executeInTransaction(session -> session.get(Topic.class, id));
-
-    }
+    private TopicDAO topicDAO = new TopicDAO();
 
     public void updateRating(Long topicId, User user, boolean isLike) {
         SessionManager.executeInTransactionWithoutReturn(session -> {
             Topic topic = session.get(Topic.class, topicId);
-            TopicRating existingRating = findExistingRating(session, topicId, user.getId());
+            TopicRating existingRating = topicDAO.findExistingRating(session, topicId, user.getId());
             if (existingRating != null)
                 processExistingRating(session, topic, existingRating, isLike);
             else
                 addNewRating(session, topic, user, isLike);
         });
-    }
-
-    private TopicRating findExistingRating(Session session, Long topicId, Long userId) {
-        Query<TopicRating> query = session.createQuery(
-                "FROM TopicRating t WHERE t.user.id = :userId AND t.topic.id = :topicId", TopicRating.class);
-        query.setParameter("userId", userId);
-        query.setParameter("topicId", topicId);
-        return query.uniqueResultOptional().orElse(null);
     }
 
     private void changeTopicRating(Topic topic, int like, int dislike) {
