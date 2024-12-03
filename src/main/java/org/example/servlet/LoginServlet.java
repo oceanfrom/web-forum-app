@@ -9,11 +9,9 @@ import org.example.model.User;
 import org.example.dao.UserDAO;
 import org.example.config.ThymeleafConfig;
 import org.example.service.UserService;
-import org.example.utils.ThymeleafContextUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import java.io.IOException;
-import java.util.Map;
 
 @Slf4j
 @WebServlet("/login")
@@ -32,13 +30,13 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        User user = userService.getCurrentUser(req);
+        User user = (User) req.getSession().getAttribute("user");
         if (user != null) {
             log.info("User already logged in, redirecting to forum.");
             resp.sendRedirect("/forum");
         }
 
-        Context context = ThymeleafContextUtils.createContext(Map.of());
+        Context context = new Context();
         templateEngine.process("login", context, resp.getWriter());
         log.info("Login page rendered successfully.");
     }

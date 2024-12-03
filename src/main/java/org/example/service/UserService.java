@@ -1,33 +1,23 @@
 package org.example.service;
 
-import jakarta.servlet.http.HttpServletRequest;
 import org.example.dao.UserDAO;
 import org.example.model.User;
 import org.example.validator.EmailValidator;
 import org.example.validator.NameValidator;
+import org.example.validator.PasswordValidator;
 
 public class UserService {
     private UserDAO userDAO = new UserDAO();
-
-    public User getCurrentUser(HttpServletRequest req) {
-        return (User) req.getSession().getAttribute("user");
-    }
-
-    public Boolean isLoggedIn(HttpServletRequest req) {
-        return (Boolean) req.getSession().getAttribute("loggedIn");
-    }
-
-    public boolean isEmailTaken(String email) {
-        User user = userDAO.getUserByEmail(email);
-        return user != null;
-    }
+    private EmailValidator emailValidator = new EmailValidator();
+    private NameValidator nameValidator = new NameValidator();
+    private PasswordValidator passwordValidator = new PasswordValidator();
 
     public String authenticateUser(String email, String password) {
-        if (!EmailValidator.isValidEmail(email))
+        if (emailValidator.isValidEmail(email))
             return "Invalid email";
 
-        if (password == null || password.length() < 6)
-            return "Password must be at least 6 characters";
+        if (passwordValidator.isValidPassword(password))
+            return "Password must be between 6 and 15 characters";
 
         User user = userDAO.getUserByEmail(email);
         if (user == null || !user.getPassword().equals(password))
@@ -37,7 +27,7 @@ public class UserService {
     }
 
     public String updateUsername(User currentUser, String newUsername) {
-        if (!NameValidator.isValidName(newUsername))
+        if (!nameValidator.isValidName(newUsername))
             return "Invalid username";
 
         currentUser.setUsername(newUsername);
@@ -46,8 +36,8 @@ public class UserService {
     }
 
     public String updatePassword(User currentUser, String newPassword) {
-        if (newPassword == null || newPassword.length() < 6)
-            return "Password must be at least 6 characters";
+        if (passwordValidator.isValidPassword(newPassword))
+            return "Password must be between 6 and 15 characters";
 
         currentUser.setPassword(newPassword);
         userDAO.updateUser(currentUser);
@@ -55,9 +45,9 @@ public class UserService {
     }
 
     public String updateEmail(User currentUser, String newEmail) {
-        if (!EmailValidator.isValidEmail(newEmail))
+        if (emailValidator.isValidEmail(newEmail))
             return "Not correct email address";
-        else if (isEmailTaken(newEmail))
+        else if (emailValidator.isEmailTaken(newEmail))
             return "Email address already in use";
 
         currentUser.setEmail(newEmail);

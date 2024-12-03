@@ -1,18 +1,14 @@
 package org.example.utils;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-
-import java.io.IOException;
 
 @Slf4j
 public class IdParserUtils {
-    public static Long parseId(String path, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+
+    public static Long parseId(String path) throws InvalidIdException {
         if (path == null || path.isEmpty()) {
-            log.warn("Invalid id, redirecting to error page.");
-            resp.sendRedirect(req.getContextPath() + "/error");
-            return null;
+            log.warn("Invalid id, will throw exception.");
+            throw new InvalidIdException("Invalid ID.");
         }
 
         if (path.startsWith("/")) {
@@ -24,40 +20,41 @@ public class IdParserUtils {
             topicId = Long.parseLong(path);
         } catch (NumberFormatException e) {
             log.error("Invalid id in path: {}", path, e);
-            resp.sendRedirect(req.getContextPath() + "/error");
-            return null;
+            throw new InvalidIdException("Invalid ID format.");
         }
 
         return topicId;
     }
 
-    public static Long parseCommentId(String path, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    public static Long parseCommentId(String path) throws InvalidIdException {
         if (path == null || path.isEmpty()) {
-            log.warn("Invalid commentId, redirecting to error page.");
-            resp.sendRedirect(req.getContextPath() + "/error");
-            return null;
+            log.warn("Invalid commentId, will throw exception.");
+            throw new InvalidIdException("Invalid Comment ID.");
         }
         Long commentId = null;
         try {
             commentId = Long.parseLong(path);
         } catch (NumberFormatException e) {
             log.error("Invalid commentId in path: {}", path, e);
-            resp.sendRedirect(req.getContextPath() + "/error");
-            return null;
+            throw new InvalidIdException("Invalid Comment ID format.");
         }
         return commentId;
     }
 
-    public static Long parseCategoryId(String categoryIdStr, HttpServletResponse resp, HttpServletRequest req) throws IOException {
+    public static Long parseCategoryId(String categoryIdStr) throws InvalidIdException {
         Long categoryId;
         try {
             categoryId = Long.parseLong(categoryIdStr.trim());
         } catch (NumberFormatException e) {
             log.error("Invalid category ID format: {}", categoryIdStr, e);
-            resp.sendRedirect(req.getContextPath() + "/error");
-            return null;
+            throw new InvalidIdException("Invalid Category ID format.");
         }
         return categoryId;
     }
 
+    public static class InvalidIdException extends Exception {
+        public InvalidIdException(String message) {
+            super(message);
+        }
+    }
 }

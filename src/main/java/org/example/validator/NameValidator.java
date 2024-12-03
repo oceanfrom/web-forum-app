@@ -6,7 +6,7 @@ import java.util.regex.Matcher;
 public class NameValidator {
     private static final String NAME_REGEX = "^[A-Z][a-zA-Z]* [A-Z][a-zA-Z]*$";
 
-    public static boolean isValidName(String name) {
+    public boolean isValidName(String name) {
         if (name == null || name.isEmpty()) {
             return false;
         }

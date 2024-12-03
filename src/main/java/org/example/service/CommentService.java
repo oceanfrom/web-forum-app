@@ -1,44 +1,16 @@
 package org.example.service;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dao.CommentDAO;
 import org.example.model.Comment;
 import org.example.model.CommentRating;
 import org.example.model.User;
 import org.example.transaction.SessionManager;
-import org.example.utils.IdParserUtils;
 import org.hibernate.Session;
 
-import java.io.IOException;
 @Slf4j
 public class CommentService {
     private CommentDAO commentDAO = new CommentDAO();
-
-    public void handleLikeComment(HttpServletRequest req, HttpServletResponse resp, User currentUser, Long topicId) throws IOException {
-        Long commentId = IdParserUtils.parseCommentId(req.getParameter("commentId"), req, resp);
-        log.info("User '{}' liked comment with ID: {}", currentUser.getUsername(), commentId);
-        updateRating(commentId, currentUser, true);
-    }
-
-    public void handleDislikeComment(HttpServletRequest req, HttpServletResponse resp, User currentUser, Long topicId) throws IOException {
-        Long commentId = IdParserUtils.parseCommentId(req.getParameter("commentId"), req, resp);
-        log.info("User '{}' disliked comment with ID: {}", currentUser.getUsername(), commentId);
-        updateRating(commentId, currentUser, false);
-    }
-
-    public void handleDeleteComment(HttpServletRequest req, HttpServletResponse resp, User currentUser, Long topicId) throws IOException {
-        Long commentId = IdParserUtils.parseCommentId(req.getParameter("commentId"), req, resp);
-        log.info("User '{}' is deleting comment with ID: {}", currentUser.getUsername(), commentId);
-        commentDAO.deteleComment(commentId);
-    }
-
-    public void handleAddComment(HttpServletRequest req, HttpServletResponse resp, User currentUser, Long topicId) throws IOException {
-        String content = req.getParameter("commentContent");
-        log.info("User '{}' added a comment to topic ID: {}", currentUser.getUsername(), topicId);
-        commentDAO.addComment(topicId, content, currentUser);
-    }
 
     public void updateRating(Long commentId, User user, boolean isLike) {
         SessionManager.executeInTransactionWithoutReturn(session -> {

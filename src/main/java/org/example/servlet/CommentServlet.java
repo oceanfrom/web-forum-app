@@ -6,51 +6,79 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.example.dao.CommentDAO;
 import org.example.model.User;
 import org.example.service.CommentService;
-import org.example.service.UserService;
 import org.example.utils.IdParserUtils;
+
 import java.io.IOException;
 
 @Slf4j
 @WebServlet("/comment/*")
 public class CommentServlet extends HttpServlet {
     private CommentService commentService;
-    private UserService userService;
+    private CommentDAO commentDAO;
 
     @Override
     public void init(ServletConfig config) {
         commentService = new CommentService();
-        userService = new UserService();
+        commentDAO = new CommentDAO();
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String action = req.getParameter("action");
-        Long topicId = IdParserUtils.parseId(req.getParameter("topicId"), req, resp);
-        User currentUser = userService.getCurrentUser(req);
+        try {
+            Long topicId = IdParserUtils.parseId(req.getParameter("topicId"));
+            User currentUser = (User) req.getSession().getAttribute("user");
 
-        switch (action) {
-            case "likeComm":
-               commentService.handleLikeComment(req, resp, currentUser, topicId);
-                resp.sendRedirect("/topic/" + topicId);
-                break;
-            case "dislikeComm":
-                commentService.handleDislikeComment(req, resp, currentUser, topicId);
-                resp.sendRedirect("/topic/" + topicId);
-                break;
-            case "deleteComm":
-                commentService.handleDeleteComment(req, resp, currentUser, topicId);
-                resp.sendRedirect("/topic/" + topicId);
-                break;
-            case "addComment":
-                commentService.handleAddComment(req, resp, currentUser, topicId);
-                resp.sendRedirect("/topic/" + topicId);
-                break;
-            default:
-                log.warn("Unknown action: {}", action);
-                break;
+            switch (action) {
+                case "like-comment":
+                    handleLikeComment(req, currentUser);
+                    resp.sendRedirect("/topic/" + topicId);
+                    break;
+                case "dislike-comment":
+                    handleDislikeComment(req, currentUser);
+                    resp.sendRedirect("/topic/" + topicId);
+                    break;
+                case "delete-comment":
+                    handleDeleteComment(req, currentUser);
+                    resp.sendRedirect("/topic/" + topicId);
+                    break;
+                case "add-comment":
+                    handleAddComment(req, currentUser, topicId);
+                    resp.sendRedirect("/topic/" + topicId);
+                    break;
+            }
+        } catch (IdParserUtils.InvalidIdException e) {
+            log.error("Error parsing ID", e);
+            resp.sendRedirect(req.getContextPath() + "/error");
         }
+    }
+
+
+    private void handleLikeComment(HttpServletRequest req, User currentUser) throws IdParserUtils.InvalidIdException {
+        Long commentId = IdParserUtils.parseCommentId(req.getParameter("commentId"));
+        log.info("User '{}' liked comment with ID: {}", currentUser.getUsername(), commentId);
+        commentService.updateRating(commentId, currentUser, true);
+    }
+
+    private void handleDislikeComment(HttpServletRequest req, User currentUser) throws IdParserUtils.InvalidIdException {
+        Long commentId = IdParserUtils.parseCommentId(req.getParameter("commentId"));
+        log.info("User '{}' disliked comment with ID: {}", currentUser.getUsername(), commentId);
+        commentService.updateRating(commentId, currentUser, false);
+    }
+
+    private void handleDeleteComment(HttpServletRequest req, User currentUser) throws IdParserUtils.InvalidIdException {
+        Long commentId = IdParserUtils.parseCommentId(req.getParameter("commentId"));
+        log.info("User '{}' is deleting comment with ID: {}", currentUser.getUsername(), commentId);
+        commentDAO.deteleComment(commentId);
+    }
+
+    private void handleAddComment(HttpServletRequest req, User currentUser, Long topicId) {
+        String content = req.getParameter("commentContent");
+        log.info("User '{}' added a comment to topic ID: {}", currentUser.getUsername(), topicId);
+        commentDAO.addComment(topicId, content, currentUser);
     }
 }
 
