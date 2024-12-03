@@ -8,33 +8,37 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.model.User;
 import org.example.dao.UserDAO;
 import org.example.config.ThymeleafConfig;
-import org.example.validator.EmailValidator;
+import org.example.service.UserService;
+import org.example.utils.ThymeleafContextUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import java.io.IOException;
+import java.util.Map;
 
 @Slf4j
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
     private TemplateEngine templateEngine;
     private UserDAO userDAO;
+    private UserService userService;
 
     @Override
     public void init() {
         templateEngine = ThymeleafConfig.getTemplateEngine();
         userDAO = new UserDAO();
+        userService = new UserService();
+
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        User user = (User) req.getSession().getAttribute("user");
+        User user = userService.getCurrentUser(req);
         if (user != null) {
             log.info("User already logged in, redirecting to forum.");
             resp.sendRedirect("/forum");
         }
 
-
-        Context context = new Context();
+        Context context = ThymeleafContextUtils.createContext(Map.of());
         templateEngine.process("login", context, resp.getWriter());
         log.info("Login page rendered successfully.");
     }
@@ -43,27 +47,17 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String email = req.getParameter("email");
         String password = req.getParameter("password");
-        if (!EmailValidator.isValidEmail(email)) {
-            log.warn("Invalid email format: {}", email);
-            resp.sendRedirect("/login?error=Invalid+email");
-            return;
-        }
-
-        if (password == null || password.length() < 6) {
-            log.warn("Password is too short (less than 6 characters).");
-            resp.sendRedirect("/login?error=Password+must+be+at+least+6+characters");
+        String errorMessage = userService.authenticateUser(email, password);
+        if (errorMessage != null) {
+            log.warn("Authentication failed: {}", errorMessage);
+            resp.sendRedirect("/login?error=" + errorMessage);
             return;
         }
 
         User user = userDAO.getUserByEmail(email);
-        if (user != null && user.getPassword().equals(password)) {
-            log.info("User {} logged in successfully.", email);
-            req.getSession().setAttribute("user", user);
-            req.getSession().setAttribute("loggedIn", true);
-            resp.sendRedirect("/forum");
-        } else {
-            log.warn("Invalid username or password for email: {}", email);
-            resp.sendRedirect("/login?error=Invalid+username+or+password");
-        }
+        req.getSession().setAttribute("user", user);
+        req.getSession().setAttribute("loggedIn", true);
+        log.info("User {} logged in successfully.", email);
+        resp.sendRedirect("/forum");
     }
 }

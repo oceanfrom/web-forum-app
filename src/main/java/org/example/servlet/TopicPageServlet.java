@@ -13,11 +13,19 @@ import org.example.model.User;
 import org.example.dao.CommentDAO;
 import org.example.dao.TopicDAO;
 import org.example.config.ThymeleafConfig;
+import org.example.service.CommentService;
+import org.example.service.UserService;
+import org.example.utils.IdParserUtils;
+import org.example.utils.ThymeleafContextUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.example.service.TopicService;
+
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @WebServlet("/topic/*")
@@ -27,6 +35,7 @@ public class TopicPageServlet extends HttpServlet {
     private TopicService topicService;
     private CommentDAO commentDAO;
     private CategoryDAO categoryDAO;
+    private UserService userService;
 
     @Override
     public void init() {
@@ -35,51 +44,28 @@ public class TopicPageServlet extends HttpServlet {
         commentDAO = new CommentDAO();
         topicService = new TopicService();
         categoryDAO = new CategoryDAO();
+        userService = new UserService();
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String path = req.getPathInfo();
-        if (path == null || path.isEmpty()) {
-            log.warn("Invalid path, redirecting to error page.");
-            resp.sendRedirect(req.getContextPath() + "/error");
-            return;
-        }
-        if (path.startsWith("/")) {
-            path = path.substring(1);
-        }
-        Long topicId;
-        try {
-            topicId = Long.parseLong(path);
-        } catch (NumberFormatException e) {
-            log.error("Invalid topicId in path: {}", path, e);
-            resp.sendRedirect(req.getContextPath() + "/error");
-            return;
-        }
-
-        User currentUser = (User) req.getSession().getAttribute("user");
-        Boolean loggedIn = (Boolean) req.getSession().getAttribute("loggedIn");
-        log.debug("Current user: {}, Logged in: {}", currentUser, loggedIn);
-
+        Long topicId = IdParserUtils.parseId(req.getPathInfo(), req, resp);
+        User currentUser = userService.getCurrentUser(req);
+        Boolean loggedIn = userService.isLoggedIn(req);
         Topic topic = topicDAO.getTopicById(topicId);
         if (topic == null) {
-            log.warn("Topic with id {} not found, redirecting to error page.", topicId);
             resp.sendRedirect(req.getContextPath() + "/error");
             return;
         }
-
         List<Comment> comments = commentDAO.getCommentsByTopicId(topicId);
-        log.debug("Loaded {} comments for topicId {}", comments.size(), topicId);
 
-        User topicCreator = topic.getCreatedBy();
-
-        Context context = new Context();
-        context.setVariable("topic", topic);
-        context.setVariable("loggedIn", loggedIn);
-        context.setVariable("currentUser", currentUser);
-        context.setVariable("topicCreator", topicCreator);
-        context.setVariable("comments", comments);
-        resp.setContentType("text/html");
+        Map<String, Object> contextVal = new HashMap<>();
+        contextVal.put("topic", topic);
+        contextVal.put("loggedIn", loggedIn != null ? loggedIn : false);
+        contextVal.put("currentUser", currentUser != null ? currentUser : new User());
+        contextVal.put("topicCreator", topic.getCreatedBy() != null ? topic.getCreatedBy() : new User());
+        contextVal.put("comments", comments != null ? comments : new ArrayList<>());
+        Context context = ThymeleafContextUtils.createContext(contextVal);
         templateEngine.process("topic", context, resp.getWriter());
         log.info("Successfully processed GET request for topicId {}", topicId);
     }
@@ -87,62 +73,28 @@ public class TopicPageServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String action = req.getParameter("action");
-        User currentUser = (User) req.getSession().getAttribute("user");
-        if ("create".equals(action)) {
-            String title = req.getParameter("title");
-            String categoryIdStr = req.getParameter("categoryIdStr");
-            String description = req.getParameter("description");
+        User currentUser = userService.getCurrentUser(req);
 
-            if (title == null || title.trim().isEmpty() || description == null || description.trim().isEmpty() || categoryIdStr == null || categoryIdStr.trim().isEmpty()) {
-                log.warn("Missing or invalid input: title, description, or category ID is empty.");
-                resp.sendRedirect(req.getContextPath() + "/error");
-                return;
-            }
-            Long categoryId;
-            try {
-                categoryId = Long.parseLong(categoryIdStr.trim());
-            } catch (NumberFormatException e) {
-                log.error("Invalid category ID format: {}", categoryIdStr, e);
-                resp.sendRedirect(req.getContextPath() + "/error");
-                return;
-            }
-
-            Category category = categoryDAO.getCategoryById(categoryId);
-            topicDAO.addTopic(title, description, categoryId, currentUser);
-            log.info("Successfully created topic with title: '{}' in category: '{}'.", title, category.getName());
-            resp.sendRedirect(req.getContextPath() + "/forum");
-            return;
+        switch (action) {
+            case "create":
+                topicService.handleCreateTopic(req, resp, currentUser);
+                resp.sendRedirect(req.getContextPath() + "/forum");
+                break;
+            case "like":
+                topicService.handleLikeAction(req, resp, currentUser);
+                resp.sendRedirect(req.getRequestURI());
+                break;
+            case "dislike":
+                topicService.handleDislikeAction(req, resp, currentUser);
+                resp.sendRedirect(req.getRequestURI());
+                break;
+            case "deleteTopic":
+                topicService.handleDeleteTopic(req, resp, currentUser);
+                resp.sendRedirect("/forum");
+                break;
+            default:
+                resp.sendRedirect("/forum");
+                break;
         }
-
-        String topicIdString = req.getParameter("topicId");
-        if (topicIdString == null || topicIdString.isEmpty()) {
-            log.warn("topicId is null or empty, redirecting to error page.");
-            resp.sendRedirect(req.getContextPath() + "/error");
-            return;
-        }
-        Long topicId;
-        try {
-            topicId = Long.parseLong(topicIdString);
-        } catch (NumberFormatException e) {
-            log.error("Invalid topic ID format: {}", topicIdString, e);
-            resp.sendRedirect(req.getContextPath() + "/error");
-            return;
-        }
-
-        if ("like".equals(action)) {
-            log.info("User {} liked topic {}", currentUser, topicId);
-            topicService.updateRating(topicId, currentUser, true);
-        } else if ("dislike".equals(action)) {
-            log.info("User {} disliked topic {}", currentUser, topicId);
-            topicService.updateRating(topicId, currentUser, false);
-        } else if ("deleteTopic".equals(action)) {
-            topicDAO.deleteTopicById(topicId);
-            log.info("User {} deleted topic {}", currentUser, topicId);
-            resp.sendRedirect(req.getContextPath() + "/forum");
-            return;
-        }
-        resp.sendRedirect(req.getRequestURI());
-        log.info("Successfully processed POST request for topicId {}", topicId);
     }
-
 }

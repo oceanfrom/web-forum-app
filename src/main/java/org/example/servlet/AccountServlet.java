@@ -7,37 +7,35 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.example.model.Topic;
 import org.example.model.User;
 import org.example.dao.TopicDAO;
-import org.example.dao.UserDAO;
 import org.example.config.ThymeleafConfig;
-import org.example.validator.EmailValidator;
-import org.example.validator.NameValidator;
+import org.example.utils.ThymeleafContextUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import lombok.extern.slf4j.Slf4j;
 import org.example.service.UserService;
-
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @WebServlet("/account/*")
 public class AccountServlet extends HttpServlet {
     private TemplateEngine templateEngine;
-    private UserDAO userDAO;
     private TopicDAO topicDAO;
     private UserService userService;
 
     @Override
     public void init() {
         templateEngine = ThymeleafConfig.getTemplateEngine();
-        userDAO = new UserDAO();
         topicDAO = new TopicDAO();
         userService = new UserService();
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        User currentUser = (User) req.getSession().getAttribute("user");
+        User currentUser = userService.getCurrentUser(req);
         if (currentUser == null) {
             log.warn("User not logged in, redirecting to login page.");
             resp.sendRedirect("/login");
@@ -46,10 +44,11 @@ public class AccountServlet extends HttpServlet {
         List<Topic> createdTopics = topicDAO.getCreatedTopicsByUser(currentUser.getId());
         List<Topic> likedTopics = topicDAO.getLikedTopicsByUser(currentUser.getId());
 
-        Context context = new Context();
-        context.setVariable("createdTopics", createdTopics);
-        context.setVariable("likedTopics", likedTopics);
-        context.setVariable("user", currentUser);
+        Map<String, Object> contextVal = new HashMap<>();
+        contextVal.put("createdTopics", createdTopics != null ? createdTopics : new ArrayList<>());
+        contextVal.put("likedTopics", likedTopics != null ? likedTopics : new ArrayList<>());
+        contextVal.put("user", currentUser);
+        Context context = ThymeleafContextUtils.createContext(contextVal);
         templateEngine.process("account", context, resp.getWriter());
         log.info("Successfully rendered account page for user {}", currentUser.getId());
     }
@@ -58,48 +57,32 @@ public class AccountServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String action = req.getRequestURI();
         String errorMessage = "";
-        User currentUser = (User) req.getSession().getAttribute("user");
+        User currentUser = userService.getCurrentUser(req);
 
-        if (action.equals("/account/update-username")) {
-            String newUsername = req.getParameter("username");
-            if (!NameValidator.isValidName(newUsername)) {
-                errorMessage = "Invalid username";
-                log.warn("Invalid username: {}", newUsername);
-            } else {
-                currentUser.setUsername(newUsername);
-                userDAO.updateUser(currentUser);
-                log.info("Username updated successfully for user {}", currentUser.getId());
-            }
-        } else if (action.equals("/account/update-password")) {
-            String newPassword = req.getParameter("password");
-            if (newPassword == null || newPassword.length() < 6) {
-                errorMessage = "Password must be at least 6 characters";
-                log.warn("Invalid password: length less than 6 characters.");
-            } else {
-                currentUser.setPassword(newPassword);
-                userDAO.updateUser(currentUser);
-                log.info("Password updated successfully for user {}", currentUser.getId());
-            }
-        } else if (action.equals("/account/update-email")) {
-            String newEmail = req.getParameter("email");
-            if (!EmailValidator.isValidEmail(newEmail)) {
-                errorMessage = "Not correct email address";
-                log.warn("Invalid email format: {}", newEmail);
-            } else if (userService.isEmailTaken(newEmail)) {
-                errorMessage = "Email address already in use";
-                log.warn("Email address already taken: {}", newEmail);
-            } else {
-                currentUser.setEmail(newEmail);
-                userDAO.updateUser(currentUser);
-                log.info("Email updated successfully for user {}", currentUser.getId());
-            }
+        switch (action) {
+            case "/account/update-username":
+                errorMessage = userService.updateUsername(currentUser, req.getParameter("username"));
+                break;
+
+            case "/account/update-password":
+                errorMessage = userService.updatePassword(currentUser, req.getParameter("password"));
+                break;
+
+            case "/account/update-email":
+                errorMessage = userService.updateEmail(currentUser, req.getParameter("email"));
+                break;
+
+            default:
+                log.warn("Unknown action: {}", action);
+                break;
         }
 
-        if (!errorMessage.isEmpty()) {
+        if (errorMessage != null && !errorMessage.isEmpty()) {
             log.warn("Error updating account settings: {}", errorMessage);
-            Context context = new Context();
-            context.setVariable("user", currentUser);
-            context.setVariable("errorMessage", errorMessage);
+            Map<String, Object> contextVal = new HashMap<>();
+            contextVal.put("user", currentUser);
+            contextVal.put("errorMessage", errorMessage);
+            Context context = ThymeleafContextUtils.createContext(contextVal);
             templateEngine.process("account", context, resp.getWriter());
         } else {
             log.info("Changes saved successfully for user {}", currentUser.getId());
