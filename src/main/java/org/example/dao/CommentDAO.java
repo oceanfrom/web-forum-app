@@ -3,22 +3,13 @@ package org.example.dao;
 import org.example.model.*;
 import org.example.transaction.SessionManager;
 import org.hibernate.Session;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class CommentDAO {
 
-    public Comment addComment(Long topicId, String content, User user) {
-        return SessionManager.executeInTransaction(session -> {
-            Topic topic = session.get(Topic.class, topicId);
-            Comment comment = new Comment();
-            comment.setContent(content);
-            comment.setTopic(topic);
-            comment.setCreatedBy(user);
-            comment.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
+    public void addComment(Comment comment) {
+         SessionManager.executeInTransactionWithoutReturn(session -> {
             session.save(comment);
-            return comment;
         });
     }
 

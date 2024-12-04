@@ -55,7 +55,7 @@ public class TopicPageServlet extends HttpServlet {
             return;
         }
         List<Comment> comments = commentDAO.getCommentsByTopicId(topicId);
-        Context context = createContextVal(topic,currentUser,loggedIn,comments);
+        Context context = createContextVal(topic, currentUser, loggedIn, comments);
         templateEngine.process("topic", context, resp.getWriter());
         log.info("Successfully processed GET request for topicId {}", topicId);
     }
@@ -122,14 +122,15 @@ public class TopicPageServlet extends HttpServlet {
 
     private void handleLikeAction(HttpServletRequest req, User currentUser) throws IdParserUtils.InvalidIdException {
         Long topicId = IdParserUtils.parseId(req.getParameter("topicId"));
+        topicService.updateRating(topicId, currentUser, true);
         log.info("User {} liked topic {}", currentUser, topicId);
-       topicService.updateRating(topicId, currentUser, true);
     }
+
 
     private void handleDislikeAction(HttpServletRequest req, User currentUser) throws IdParserUtils.InvalidIdException {
         Long topicId = IdParserUtils.parseId(req.getParameter("topicId"));
         log.info("User {} disliked topic {}", currentUser, topicId);
-       topicService.updateRating(topicId, currentUser, false);
+        topicService.updateRating(topicId, currentUser, false);
     }
 
     private void handleDeleteTopic(HttpServletRequest req, User currentUser) throws IdParserUtils.InvalidIdException {

@@ -19,6 +19,7 @@ public class HibernateConfig {
                     .addAnnotatedClass(Comment.class)
                     .addAnnotatedClass(CommentRating.class)
                     .addAnnotatedClass(Category.class)
+                    .addAnnotatedClass(Notification.class)
                     .buildSessionFactory();
         } catch (Exception e) {
             e.printStackTrace();

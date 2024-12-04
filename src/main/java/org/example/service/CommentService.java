@@ -1,16 +1,33 @@
 package org.example.service;
 
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dao.CommentDAO;
 import org.example.model.Comment;
 import org.example.model.CommentRating;
+import org.example.model.Topic;
 import org.example.model.User;
 import org.example.transaction.SessionManager;
 import org.hibernate.Session;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
 @Slf4j
 public class CommentService {
     private CommentDAO commentDAO = new CommentDAO();
+    private NotificationService notificationService = new NotificationService();
+
+    @Transactional
+    public void createComment(String content, User user, Topic topic) {
+        Comment comment = new Comment();
+        comment.setContent(content);
+        comment.setTopic(topic);
+        comment.setCreatedBy(user);
+        comment.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
+        commentDAO.addComment(comment);
+        notificationService.createCommentNotification(user, topic, comment);
+    }
 
     public void updateRating(Long commentId, User user, boolean isLike) {
         SessionManager.executeInTransactionWithoutReturn(session -> {

@@ -7,10 +7,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dao.CommentDAO;
+import org.example.dao.TopicDAO;
+import org.example.model.Topic;
 import org.example.model.User;
 import org.example.service.CommentService;
 import org.example.utils.IdParserUtils;
-
 import java.io.IOException;
 
 @Slf4j
@@ -18,11 +19,13 @@ import java.io.IOException;
 public class CommentServlet extends HttpServlet {
     private CommentService commentService;
     private CommentDAO commentDAO;
+    private TopicDAO topicDAO;
 
     @Override
     public void init(ServletConfig config) {
         commentService = new CommentService();
         commentDAO = new CommentDAO();
+        topicDAO = new TopicDAO();
     }
 
     @Override
@@ -77,8 +80,10 @@ public class CommentServlet extends HttpServlet {
 
     private void handleAddComment(HttpServletRequest req, User currentUser, Long topicId) {
         String content = req.getParameter("commentContent");
+        Topic topic = topicDAO.getTopicById(topicId);
+        commentService.createComment(content, currentUser, topic);
         log.info("User '{}' added a comment to topic ID: {}", currentUser.getUsername(), topicId);
-        commentDAO.addComment(topicId, content, currentUser);
     }
+
 }
 

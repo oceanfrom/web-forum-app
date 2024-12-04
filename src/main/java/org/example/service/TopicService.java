@@ -11,30 +11,39 @@ import org.hibernate.Session;
 @Slf4j
 public class TopicService {
     private TopicDAO topicDAO = new TopicDAO();
+    private NotificationService notificationService = new NotificationService();
 
     public void updateRating(Long topicId, User user, boolean isLike) {
         SessionManager.executeInTransactionWithoutReturn(session -> {
             Topic topic = session.get(Topic.class, topicId);
             TopicRating existingRating = topicDAO.findExistingRating(session, topicId, user.getId());
-            if (existingRating != null)
-                processExistingRating(session, topic, existingRating, isLike);
-            else
-                addNewRating(session, topic, user, isLike);
+            boolean isNewLike = false;
+            if (existingRating != null) {
+                isNewLike = processExistingRating(session, topic, existingRating, isLike);
+            } else {
+                isNewLike = addNewRating(session, topic, user, isLike);
+            }
+
+            if (isNewLike && isLike) {
+                notificationService.createLikeNotification(user, topic);
+            }
         });
     }
+
 
     private void changeTopicRating(Topic topic, int like, int dislike) {
         topic.setLikes(topic.getLikes() + like);
         topic.setDislikes(topic.getDislikes() + dislike);
     }
 
-    private void processExistingRating(Session session, Topic topic, TopicRating existingRating, boolean isLike) {
+    private boolean processExistingRating(Session session, Topic topic, TopicRating existingRating, boolean isLike) {
         if (existingRating.isLike() == isLike) {
             session.delete(existingRating);
             if (isLike)
                 changeTopicRating(topic, -1, 0);
             else
                 changeTopicRating(topic, 0, -1);
+            return false;
         } else {
             existingRating.setLike(isLike);
             session.update(existingRating);
@@ -42,10 +51,12 @@ public class TopicService {
                 changeTopicRating(topic, 1, -1);
             else
                 changeTopicRating(topic, -1, 1);
+            return isLike;
         }
     }
 
-    private void addNewRating(Session session, Topic topic, User user, boolean isLike) {
+
+    private boolean addNewRating(Session session, Topic topic, User user, boolean isLike) {
         TopicRating newRating = new TopicRating();
         newRating.setUser(user);
         newRating.setTopic(topic);
@@ -55,5 +66,6 @@ public class TopicService {
             changeTopicRating(topic, 1, 0);
         else
             changeTopicRating(topic, 0, 1);
+        return true;
     }
 }
