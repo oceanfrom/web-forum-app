@@ -25,7 +25,7 @@ public class CommentService {
         comment.setTopic(topic);
         comment.setCreatedBy(user);
         comment.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
-        commentDAO.addComment(comment);
+        commentDAO.addCommentById(comment);
         notificationService.createCommentNotification(user, topic, comment);
     }
 

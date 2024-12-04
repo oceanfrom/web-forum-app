@@ -6,7 +6,18 @@ import org.example.transaction.SessionManager;
 import java.util.List;
 
 public class NotificationDAO {
-    public void addNotification(Notification notification) {
+
+    public void deleteNotificationById(Long notificationId)  {
+        SessionManager.executeInTransactionWithoutReturn(session -> {
+            Notification notification = session.get(Notification.class, notificationId);
+            if(notification == null)
+                return;
+            session.delete(notification);
+        });
+    }
+
+
+    public void addNotificationById(Notification notification) {
         SessionManager.executeInTransactionWithoutReturn(session -> session.save(notification));
     }
 

@@ -7,13 +7,13 @@ import java.util.List;
 
 public class CommentDAO {
 
-    public void addComment(Comment comment) {
+    public void addCommentById(Comment comment) {
          SessionManager.executeInTransactionWithoutReturn(session -> {
             session.save(comment);
         });
     }
 
-    public void deteleComment(Long commentId) {
+    public void deteleCommentById(Long commentId) {
         SessionManager.executeInTransactionWithoutReturn(session -> {
            Comment comment = session.load(Comment.class, commentId);
            if(comment != null) {

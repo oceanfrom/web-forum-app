@@ -61,21 +61,21 @@ public class CommentServlet extends HttpServlet {
 
 
     private void handleLikeComment(HttpServletRequest req, User currentUser) throws IdParserUtils.InvalidIdException {
-        Long commentId = IdParserUtils.parseCommentId(req.getParameter("commentId"));
+        Long commentId = IdParserUtils.parseId(req.getParameter("commentId"));
         log.info("User '{}' liked comment with ID: {}", currentUser.getUsername(), commentId);
         commentService.updateRating(commentId, currentUser, true);
     }
 
     private void handleDislikeComment(HttpServletRequest req, User currentUser) throws IdParserUtils.InvalidIdException {
-        Long commentId = IdParserUtils.parseCommentId(req.getParameter("commentId"));
+        Long commentId = IdParserUtils.parseId(req.getParameter("commentId"));
         log.info("User '{}' disliked comment with ID: {}", currentUser.getUsername(), commentId);
         commentService.updateRating(commentId, currentUser, false);
     }
 
     private void handleDeleteComment(HttpServletRequest req, User currentUser) throws IdParserUtils.InvalidIdException {
-        Long commentId = IdParserUtils.parseCommentId(req.getParameter("commentId"));
+        Long commentId = IdParserUtils.parseId(req.getParameter("commentId"));
         log.info("User '{}' is deleting comment with ID: {}", currentUser.getUsername(), commentId);
-        commentDAO.deteleComment(commentId);
+        commentDAO.deteleCommentById(commentId);
     }
 
     private void handleAddComment(HttpServletRequest req, User currentUser, Long topicId) {

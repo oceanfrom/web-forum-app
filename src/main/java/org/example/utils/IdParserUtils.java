@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class IdParserUtils {
 
-    public static Long parseId(String path) throws InvalidIdException {
+    public static Long parseIdWithSubstring(String path) throws InvalidIdException {
         if (path == null || path.isEmpty()) {
             log.warn("Invalid id, will throw exception.");
             throw new InvalidIdException("Invalid ID.");
@@ -26,31 +26,22 @@ public class IdParserUtils {
         return topicId;
     }
 
-    public static Long parseCommentId(String path) throws InvalidIdException {
+    public static Long parseId(String path) throws InvalidIdException {
         if (path == null || path.isEmpty()) {
-            log.warn("Invalid commentId, will throw exception.");
-            throw new InvalidIdException("Invalid Comment ID.");
+            log.info("Invalid ID, will throw exception.");
+            throw new InvalidIdException("Invalid ID.");
         }
-        Long commentId = null;
+        Long id = null;
         try {
-            commentId = Long.parseLong(path);
+            id = Long.parseLong(path);
         } catch (NumberFormatException e) {
-            log.error("Invalid commentId in path: {}", path, e);
-            throw new InvalidIdException("Invalid Comment ID format.");
+            log.error("Invalid ID format in path: {}", path, e);
+            throw new InvalidIdException("Invalid ID format.");
         }
-        return commentId;
+        return id;
     }
 
-    public static Long parseCategoryId(String categoryIdStr) throws InvalidIdException {
-        Long categoryId;
-        try {
-            categoryId = Long.parseLong(categoryIdStr.trim());
-        } catch (NumberFormatException e) {
-            log.error("Invalid category ID format: {}", categoryIdStr, e);
-            throw new InvalidIdException("Invalid Category ID format.");
-        }
-        return categoryId;
-    }
+
 
     public static class InvalidIdException extends Exception {
         public InvalidIdException(String message) {

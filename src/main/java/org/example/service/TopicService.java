@@ -2,16 +2,29 @@ package org.example.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.dao.TopicDAO;
+import org.example.model.Category;
 import org.example.model.Topic;
 import org.example.model.TopicRating;
 import org.example.model.User;
 import org.example.transaction.SessionManager;
 import org.hibernate.Session;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Slf4j
 public class TopicService {
     private TopicDAO topicDAO = new TopicDAO();
     private NotificationService notificationService = new NotificationService();
+
+    public void createTopic(String title, String description, Category category, User user) {
+        Topic topic = new Topic();
+        topic.setTitle(title);
+        topic.setContent(description);
+        topic.setCategory(category);
+        topic.setCreatedBy(user);
+        topic.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
+        topicDAO.addTopicById(topic);
+    }
 
     public void updateRating(Long topicId, User user, boolean isLike) {
         SessionManager.executeInTransactionWithoutReturn(session -> {
@@ -29,7 +42,6 @@ public class TopicService {
             }
         });
     }
-
 
     private void changeTopicRating(Topic topic, int like, int dislike) {
         topic.setLikes(topic.getLikes() + like);
@@ -54,7 +66,6 @@ public class TopicService {
             return isLike;
         }
     }
-
 
     private boolean addNewRating(Session session, Topic topic, User user, boolean isLike) {
         TopicRating newRating = new TopicRating();

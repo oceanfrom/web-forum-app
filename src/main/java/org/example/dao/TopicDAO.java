@@ -1,28 +1,16 @@
 package org.example.dao;
 
-import org.example.model.Category;
 import org.example.model.Topic;
 import org.example.model.TopicRating;
-import org.example.model.User;
 import org.example.transaction.SessionManager;
 import org.hibernate.Session;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class TopicDAO {
 
-    public Topic addTopic(String title, String description, Long categoryId, User user) {
-        return SessionManager.executeInTransaction(session -> {
-            Category category = session.get(Category.class, categoryId);
-            Topic topic = new Topic();
-            topic.setTitle(title);
-            topic.setContent(description);
-            topic.setCategory(category);
-            topic.setCreatedBy(user);
-            topic.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
+    public void addTopicById(Topic topic) {
+        SessionManager.executeInTransactionWithoutReturn(session -> {
             session.save(topic);
-            return topic;
         });
     }
 

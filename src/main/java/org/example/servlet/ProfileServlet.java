@@ -40,7 +40,7 @@ public class ProfileServlet extends HttpServlet {
         }
         Long userId = null;
         try {
-            userId = IdParserUtils.parseId(req.getPathInfo());
+            userId = IdParserUtils.parseIdWithSubstring(req.getPathInfo());
         } catch (IdParserUtils.InvalidIdException e) {
             log.error("Error parsing ID", e);
             resp.sendRedirect(req.getContextPath() + "/error");

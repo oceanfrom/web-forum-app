@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dao.CategoryDAO;
+import org.example.model.Category;
 import org.example.model.Comment;
 import org.example.model.Topic;
 import org.example.model.User;
@@ -41,7 +42,7 @@ public class TopicPageServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Long topicId = null;
         try {
-            topicId = IdParserUtils.parseId(req.getPathInfo());
+            topicId = IdParserUtils.parseIdWithSubstring(req.getPathInfo());
         } catch (IdParserUtils.InvalidIdException e) {
             log.error("Error parsing ID", e);
             resp.sendRedirect(req.getContextPath() + "/error");
@@ -92,7 +93,6 @@ public class TopicPageServlet extends HttpServlet {
 
     private Context createContextVal(Topic topic, User currentUser, Boolean loggedIn, List<Comment> comments) {
         Context context = new Context();
-
         context.setVariable("topic", topic);
         context.setVariable("loggedIn", loggedIn);
         context.setVariable("currentUser", currentUser);
@@ -104,18 +104,15 @@ public class TopicPageServlet extends HttpServlet {
 
     private void handleCreateTopic(HttpServletRequest req, HttpServletResponse resp, User currentUser) throws IOException, IdParserUtils.InvalidIdException {
         String title = req.getParameter("title");
-        String categoryIdStr = req.getParameter("categoryIdStr");
         String description = req.getParameter("description");
-
-        if (title == null || title.trim().isEmpty() || description == null || description.trim().isEmpty() || categoryIdStr == null || categoryIdStr.trim().isEmpty()) {
+        if (title == null || title.trim().isEmpty() || description == null || description.trim().isEmpty()) {
             log.warn("Missing or invalid input: title, description, or category ID is empty.");
             resp.sendRedirect(req.getContextPath() + "/error");
             return;
         }
-        Long categoryId = IdParserUtils.parseCategoryId(categoryIdStr);
-
-        categoryDAO.getCategoryById(categoryId);
-        topicDAO.addTopic(title, description, categoryId, currentUser);
+        Long categoryId = IdParserUtils.parseId(req.getParameter("categoryIdStr"));
+        Category category = categoryDAO.getCategoryById(categoryId);
+        topicService.createTopic(title, description, category, currentUser);
         log.info("Successfully created topic with title: '{}' in category.", title);
     }
 

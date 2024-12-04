@@ -73,13 +73,18 @@
     <div th:each="notification : ${notifications}">
         <div class="notification">
             <p><strong>Notification:</strong></p>
-            <span class="username" th:text="${notification.createdBy.username}">Пользователь</span>
+            <span class="username" th:text="${notification.createdBy.username}">User</span>
             <span th:switch="${notification.type}">
                     <span th:case="'LIKE_TOPIC'">liked your</span>
                     <span th:case="'COMMENT_TOPIC'">commented your</span>
                 </span>
             <a th:href="'/topic/' + ${notification.topic.id}" th:text="${notification.topic.title}">Topic</a>.
             <p th:text="${#dates.format(notification.timestamp , 'yyyy-MM-dd HH:mm:ss')}"></p>
+            <form action="/notifications" method="post">
+                <input type="hidden" name="action" value="notification-delete" />
+                <input type="hidden" name="notificationId" th:value="${notification.id}" />
+                <button type="submit" class="delete-button">Delete</button>
+            </form>
         </div>
     </div>
     <div th:if="${#lists.isEmpty(notifications)}">
