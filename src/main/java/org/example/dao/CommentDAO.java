@@ -23,7 +23,7 @@ public class CommentDAO {
     }
 
     public List<Comment> getCommentsByTopicId(Long topicId) {
-        return SessionManager.executeInTransaction(session -> {
+        return SessionManager.executeReadOnly(session -> {
             return session.createQuery(
                             "SELECT c FROM Comment c WHERE c.topic.id = :topicId", Comment.class)
                     .setParameter("topicId", topicId)

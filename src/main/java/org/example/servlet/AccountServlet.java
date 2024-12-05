@@ -6,8 +6,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.model.Topic;
 import org.example.model.User;
-import org.example.dao.TopicDAO;
 import org.example.config.ThymeleafConfig;
+import org.example.service.TopicService;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import lombok.extern.slf4j.Slf4j;
@@ -19,13 +19,13 @@ import java.util.List;
 @WebServlet("/account/*")
 public class AccountServlet extends HttpServlet {
     private TemplateEngine templateEngine;
-    private TopicDAO topicDAO;
+    private TopicService topicService;
     private UserService userService;
 
     @Override
     public void init() {
         templateEngine = ThymeleafConfig.getTemplateEngine();
-        topicDAO = new TopicDAO();
+        topicService = new TopicService();
         userService = new UserService();
     }
 
@@ -37,8 +37,8 @@ public class AccountServlet extends HttpServlet {
             resp.sendRedirect("/login");
             return;
         }
-        List<Topic> createdTopics = topicDAO.getCreatedTopicsByUser(currentUser.getId());
-        List<Topic> likedTopics = topicDAO.getLikedTopicsByUser(currentUser.getId());
+        List<Topic> createdTopics = topicService.getCreatedTopicsByUser(currentUser.getId());
+        List<Topic> likedTopics = topicService.getLikedTopicsByUser(currentUser.getId());
 
         Context context = createContextVal(createdTopics, likedTopics, currentUser);
         templateEngine.process("account", context, resp.getWriter());

@@ -11,6 +11,10 @@ import java.util.List;
 public class NotificationService {
     private NotificationDAO notificationDAO = new NotificationDAO();
 
+    public void deleteNotificationById(Long id) {
+        notificationDAO.deleteNotificationById(id);
+    }
+
     public void createLikeNotification(User createdBy, Topic topic) {
         Notification notification = new Notification();
         notification.setType(Notification.TYPE_LIKE_TOPIC);

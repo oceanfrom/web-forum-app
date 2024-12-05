@@ -6,9 +6,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.model.Topic;
 import org.example.model.User;
-import org.example.dao.TopicDAO;
-import org.example.dao.UserDAO;
 import org.example.config.ThymeleafConfig;
+import org.example.service.TopicService;
+import org.example.service.UserService;
 import org.example.utils.IdParserUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -20,14 +20,14 @@ import java.util.List;
 @WebServlet("/profile/*")
 public class ProfileServlet extends HttpServlet {
     private TemplateEngine templateEngine;
-    private UserDAO userDAO;
-    private TopicDAO topicDAO;
+    private UserService userService;
+    private TopicService topicService;
 
     @Override
     public void init() {
         templateEngine = ThymeleafConfig.getTemplateEngine();
-        userDAO = new UserDAO();
-        topicDAO = new TopicDAO();
+        userService = new UserService();
+        topicService = new TopicService();
     }
 
     @Override
@@ -45,7 +45,7 @@ public class ProfileServlet extends HttpServlet {
             log.error("Error parsing ID", e);
             resp.sendRedirect(req.getContextPath() + "/error");
         }
-        User user = userDAO.getUserById(userId);
+        User user = userService.getUserById(userId);
         if (user == null) {
             log.warn("User not found with ID: {}", userId);
             resp.sendRedirect(req.getContextPath() + "/error");
@@ -56,7 +56,7 @@ public class ProfileServlet extends HttpServlet {
             resp.sendRedirect(req.getContextPath() + "/account");
             return;
         }
-        List<Topic> createdTopics = topicDAO.getCreatedTopicsByUser(user.getId());
+        List<Topic> createdTopics = topicService.getCreatedTopicsByUser(user.getId());
 
         Context context = createContextVal(user, createdTopics);
         templateEngine.process("profile", context, resp.getWriter());

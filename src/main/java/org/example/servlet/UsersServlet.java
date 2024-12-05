@@ -5,8 +5,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.model.User;
-import org.example.dao.UserDAO;
 import org.example.config.ThymeleafConfig;
+import org.example.service.UserService;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import java.io.IOException;
@@ -18,12 +18,12 @@ import lombok.extern.slf4j.Slf4j;
 @WebServlet("/users")
 public class UsersServlet extends HttpServlet {
     private TemplateEngine templateEngine;
-    private UserDAO userDAO;
+    private UserService userService;
 
     @Override
     public void init() {
         templateEngine = ThymeleafConfig.getTemplateEngine();
-        userDAO = new UserDAO();
+        userService = new UserService();
     }
 
     @Override
@@ -34,7 +34,7 @@ public class UsersServlet extends HttpServlet {
             resp.sendRedirect("/login");
             return;
         }
-        List<User> users = userDAO.getAllUsers();
+        List<User> users = userService.getAllUsers();
 
         Context context = createContextVal(users, currentUser);
         templateEngine.process("users", context, resp.getWriter());

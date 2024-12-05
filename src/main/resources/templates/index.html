@@ -150,6 +150,43 @@
             margin-top: 30px;
             color: #888;
         }
+
+        .topics form {
+            display: inline-block;
+            margin-bottom: 10px;
+            vertical-align: top;
+            width: auto;
+        }
+
+
+        .topics form button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 16px;
+        }
+
+        .topics form button:hover {
+            background-color: #2980b9;
+        }
+
+        .topics form select {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            color: #555;
+            border-radius: 8px;
+            padding: 8px 12px;
+        }
+
+        .topics form select:focus {
+            border-color: #3498db;
+            outline: none;
+        }
     </style>
 </head>
 <body>
@@ -167,21 +204,43 @@
 <div th:if="${loggedIn}" class="create-topic-form">
     <details>
         <summary>Create new topic</summary>
-    <h2>Create a New Topic</h2>
-    <form action="/topic" method="post">
-        <input type="text" name="title" placeholder="Topic Name" required />
-        <textarea name="description" placeholder="Topic Description" rows="5" required></textarea>
-        <select name="categoryIdStr" required>
-            <th:block th:each="category : ${categories}">
-                <option th:value="${category.id}" th:text="${category.name}"></option>
-            </th:block>
-        </select>
-        <button type="submit" name="action" value="create-topic">Create Topic</button>
-    </form>
+        <h2>Create a New Topic</h2>
+        <form action="/topic" method="post">
+            <input type="text" name="title" placeholder="Topic Name" required />
+            <textarea name="description" placeholder="Topic Description" rows="5" required></textarea>
+            <select name="categoryIdStr" required>
+                <th:block th:each="category : ${categories}">
+                    <option th:value="${category.id}" th:text="${category.name}"></option>
+                </th:block>
+            </select>
+            <button type="submit" name="action" value="create-topic">Create Topic</button>
+        </form>
     </details>
 </div>
 <div class="topics">
     <h2>Topics</h2>
+    <form action="/forum" method="GET">
+        <input type="hidden" name="action" value="most-popular"/>
+        <button type="submit">Most popular (likes)</button>
+    </form>
+    <form action="/forum" method="GET">
+        <input type="hidden" name="action" value="least-popular"/>
+        <button type="submit">Least popular (dislikes)</button>
+    </form>
+    <form action="/forum" method="GET">
+        <select name="category" required>
+            <option value="" disabled selected>Select category</option>
+            <th:block th:each="category : ${categories}">
+                <option th:value="${category.id}" th:text="${category.name}"></option>
+            </th:block>
+        </select>
+        <input type="hidden" name="action" value="by-category"/>
+        <button type="submit">Sort by category</button>
+    </form>
+    <form action="/forum" method="GET">
+        <input type="hidden" name="action" value="all-topics"/>
+        <button type="submit">All Topics</button>
+    </form>
     <div th:if="${#lists.isEmpty(topics)}" class="no-topics">
         <p>No topics have been added yet.</p>
     </div>
@@ -189,7 +248,7 @@
         <div class="topic">
             <h3><a th:href="'/topic/' + ${topic.id}" th:text="${topic.title}">Topic Title</a></h3>
             <p><strong>
-               Author: <a th:href="'/profile/' + ${topic.createdBy.id}" th:text="${topic.createdBy.username}"></a>:
+                Author: <a th:href="'/profile/' + ${topic.createdBy.id}" th:text="${topic.createdBy.username}"></a>:
             </strong></p>
             <p><strong>Category:</strong> <span th:text="${topic.category.name}"></span></p>
             <p><strong>Created at:</strong> <span th:text="${#dates.format(topic.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></span></p>

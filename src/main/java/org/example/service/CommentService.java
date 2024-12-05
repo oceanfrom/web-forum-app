@@ -9,14 +9,22 @@ import org.example.model.Topic;
 import org.example.model.User;
 import org.example.transaction.SessionManager;
 import org.hibernate.Session;
-
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 public class CommentService {
     private CommentDAO commentDAO = new CommentDAO();
     private NotificationService notificationService = new NotificationService();
+
+    public void deteleCommentById(Long id) {
+        commentDAO.deteleCommentById(id);
+    }
+
+    public List<Comment> getCommentsByTopicId(Long id) {
+        return commentDAO.getCommentsByTopicId(id);
+    }
 
     @Transactional
     public void createComment(String content, User user, Topic topic) {

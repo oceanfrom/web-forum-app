@@ -6,7 +6,7 @@ import java.util.List;
 
 public class UserDAO {
     public User getUserByEmail(String email) {
-        return SessionManager.executeInTransaction(session -> {
+        return SessionManager.executeReadOnly(session -> {
             return session.createQuery(
                             "SELECT u FROM User u WHERE u.email = :email", User.class)
                     .setParameter("email", email)
@@ -19,13 +19,13 @@ public class UserDAO {
     }
 
     public List<User> getAllUsers() {
-        return SessionManager.executeInTransaction(session -> {
+        return SessionManager.executeReadOnly(session -> {
             return session.createQuery("SELECT u FROM User u", User.class).getResultList();
         });
     }
 
 
     public User getUserById(Long id) {
-       return SessionManager.executeInTransaction(session -> session.get(User.class, id));
+       return SessionManager.executeReadOnly(session -> session.get(User.class, id));
     }
 }

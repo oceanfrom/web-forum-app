@@ -5,14 +5,13 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.example.dao.CategoryDAO;
 import org.example.model.Category;
 import org.example.model.Comment;
 import org.example.model.Topic;
 import org.example.model.User;
-import org.example.dao.CommentDAO;
-import org.example.dao.TopicDAO;
 import org.example.config.ThymeleafConfig;
+import org.example.service.CategoryService;
+import org.example.service.CommentService;
 import org.example.utils.IdParserUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -24,18 +23,16 @@ import java.util.List;
 @WebServlet("/topic/*")
 public class TopicPageServlet extends HttpServlet {
     private TemplateEngine templateEngine;
-    private TopicDAO topicDAO;
     private TopicService topicService;
-    private CommentDAO commentDAO;
-    private CategoryDAO categoryDAO;
+    private CommentService commentService;
+    private CategoryService categoryService;
 
     @Override
     public void init() {
         templateEngine = ThymeleafConfig.getTemplateEngine();
-        topicDAO = new TopicDAO();
-        commentDAO = new CommentDAO();
+        commentService = new CommentService();
         topicService = new TopicService();
-        categoryDAO = new CategoryDAO();
+        categoryService = new CategoryService();
     }
 
     @Override
@@ -50,12 +47,12 @@ public class TopicPageServlet extends HttpServlet {
         }
         User currentUser = (User) req.getSession().getAttribute("user");
         Boolean loggedIn = (Boolean) req.getSession().getAttribute("loggedIn");
-        Topic topic = topicDAO.getTopicById(topicId);
+        Topic topic = topicService.getTopicById(topicId);
         if (topic == null) {
             resp.sendRedirect(req.getContextPath() + "/error");
             return;
         }
-        List<Comment> comments = commentDAO.getCommentsByTopicId(topicId);
+        List<Comment> comments = commentService.getCommentsByTopicId(topicId);
         Context context = createContextVal(topic, currentUser, loggedIn, comments);
         templateEngine.process("topic", context, resp.getWriter());
         log.info("Successfully processed GET request for topicId {}", topicId);
@@ -111,9 +108,9 @@ public class TopicPageServlet extends HttpServlet {
             return;
         }
         Long categoryId = IdParserUtils.parseId(req.getParameter("categoryIdStr"));
-        Category category = categoryDAO.getCategoryById(categoryId);
+        Category category = categoryService.getCategoryById(categoryId);
         topicService.createTopic(title, description, category, currentUser);
-        log.info("Successfully created topic with title: '{}' in category.", title);
+        log.info("Successfully created topic with title: {} in category {}.", title, category.getName());
     }
 
 
@@ -132,7 +129,7 @@ public class TopicPageServlet extends HttpServlet {
 
     private void handleDeleteTopic(HttpServletRequest req, User currentUser) throws IdParserUtils.InvalidIdException {
         Long topicId = IdParserUtils.parseId(req.getParameter("topicId"));
-        topicDAO.deleteTopicById(topicId);
+        topicService.deleteTopicById(topicId);
         log.info("User {} deleted topic {}", currentUser, topicId);
     }
 

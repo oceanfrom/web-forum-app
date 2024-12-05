@@ -59,6 +59,12 @@
         background-color: #2980b9;
     }
 
+    .error-message {
+        color: red;
+        font-size: 14px;
+        margin-top: 15px;
+        text-align: center;
+    }
 </style>
 <body>
 <h2>Login to the Forum</h2>
@@ -75,5 +81,8 @@
         <button type="submit">Enter</button>
     </div>
 </form>
+<div th:if="${errorMessage}" class="error-message">
+    <p th:text="${errorMessage}"></p>
+</div>
 </body>
 </html>

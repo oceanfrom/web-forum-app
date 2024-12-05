@@ -23,8 +23,31 @@ public class TopicDAO {
         });
     }
 
+    public List<Topic> getAllTopicsByLikes() {
+        return SessionManager.executeReadOnly(session -> {
+            return session.createQuery("SELECT t FROM Topic t ORDER BY t.likes DESC", Topic.class)
+                    .getResultList();
+        });
+    }
+
+    public List<Topic> getAllTopicsByDislikes() {
+        return SessionManager.executeReadOnly(session -> {
+            return session.createQuery("SELECT t FROM Topic t ORDER BY t.dislikes DESC", Topic.class)
+                    .getResultList();
+        });
+    }
+
+    public List<Topic> getAllTopicsByCategoryId(Long categoryId) {
+        return SessionManager.executeReadOnly(session -> {
+            return session.createQuery(
+                            "SELECT t FROM Topic t WHERE t.category.id = :categoryId", Topic.class)
+                    .setParameter("categoryId", categoryId)
+                    .getResultList();
+        });
+    }
+
     public List<Topic> getCreatedTopicsByUser(Long userId) {
-        return SessionManager.executeInTransaction(session -> {
+        return SessionManager.executeReadOnly(session -> {
             return session.createQuery(
                     "SELECT t FROM Topic t WHERE t.createdBy.id = :userId", Topic.class)
                     .setParameter("userId", userId).getResultList();
@@ -32,7 +55,7 @@ public class TopicDAO {
     }
 
     public List<Topic> getLikedTopicsByUser(Long userId) {
-        return SessionManager.executeInTransaction(session -> {
+        return SessionManager.executeReadOnly(session -> {
             return session.createQuery(
                     "SELECT t.topic FROM TopicRating t WHERE t.user.id = :userId AND t.like = true", Topic.class)
             .setParameter("userId", userId).getResultList();
@@ -40,14 +63,14 @@ public class TopicDAO {
     }
 
     public List<Topic> getAllTopics() {
-        return SessionManager.executeInTransaction(session -> {
+        return SessionManager.executeReadOnly(session -> {
             return session.createQuery(
                     "SELECT t FROM Topic t", Topic.class).getResultList();
         });
     }
 
     public Topic getTopicById(Long id) {
-        return SessionManager.executeInTransaction(session -> session.get(Topic.class, id));
+        return SessionManager.executeReadOnly(session -> session.get(Topic.class, id));
     }
 
     public TopicRating findExistingRating(Session session, Long topicId, Long userId) {

@@ -10,11 +10,45 @@ import org.example.transaction.SessionManager;
 import org.hibernate.Session;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 public class TopicService {
     private TopicDAO topicDAO = new TopicDAO();
     private NotificationService notificationService = new NotificationService();
+
+    public List<Topic> getLikedTopicsByUser(Long id) {
+        return topicDAO.getLikedTopicsByUser(id);
+    }
+
+    public List<Topic> getCreatedTopicsByUser(Long id) {
+        return topicDAO.getCreatedTopicsByUser(id);
+    }
+
+    public void deleteTopicById(Long id) {
+        topicDAO.deleteTopicById(id);
+    }
+
+    public Topic getTopicById(Long id) {
+        return topicDAO.getTopicById(id);
+    }
+
+    public List<Topic> getAllTopicsByLikes() {
+        return topicDAO.getAllTopicsByLikes();
+    }
+
+    public List<Topic> getAllTopicsByDislikes() {
+        return topicDAO.getAllTopicsByDislikes();
+    }
+
+    public List<Topic> getAllTopicsByCategoryId(Long id) {
+        return topicDAO.getAllTopicsByCategoryId(id);
+    }
+
+    public List<Topic> getAllTopics() {
+        return topicDAO.getAllTopics();
+    }
+
 
     public void createTopic(String title, String description, Category category, User user) {
         Topic topic = new Topic();

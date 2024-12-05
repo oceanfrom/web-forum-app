@@ -5,16 +5,13 @@ import org.hibernate.Session;
 
 public class SessionManager {
 
-    public static <T> T executeInTransaction(SessionCallback<T> callback) {
+    public static <T> T executeReadOnly(SessionCallback<T> callback) {
         Session session = HibernateConfig.getSessionFactory().openSession();
-        session.beginTransaction();
         T result = null;
-
         try {
+            session.setDefaultReadOnly(true);
             result = callback.doInSession(session);
-            session.getTransaction().commit();
         } catch (Exception e) {
-            session.getTransaction().rollback();
             e.printStackTrace();
         } finally {
             session.close();

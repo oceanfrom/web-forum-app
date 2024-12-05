@@ -6,11 +6,10 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.example.dao.CommentDAO;
-import org.example.dao.TopicDAO;
 import org.example.model.Topic;
 import org.example.model.User;
 import org.example.service.CommentService;
+import org.example.service.TopicService;
 import org.example.utils.IdParserUtils;
 import java.io.IOException;
 
@@ -18,14 +17,13 @@ import java.io.IOException;
 @WebServlet("/comment/*")
 public class CommentServlet extends HttpServlet {
     private CommentService commentService;
-    private CommentDAO commentDAO;
-    private TopicDAO topicDAO;
+    private TopicService topicService;
 
     @Override
     public void init(ServletConfig config) {
         commentService = new CommentService();
-        commentDAO = new CommentDAO();
-        topicDAO = new TopicDAO();
+        topicService = new TopicService();
+
     }
 
     @Override
@@ -75,12 +73,12 @@ public class CommentServlet extends HttpServlet {
     private void handleDeleteComment(HttpServletRequest req, User currentUser) throws IdParserUtils.InvalidIdException {
         Long commentId = IdParserUtils.parseId(req.getParameter("commentId"));
         log.info("User '{}' is deleting comment with ID: {}", currentUser.getUsername(), commentId);
-        commentDAO.deteleCommentById(commentId);
+        commentService.deteleCommentById(commentId);
     }
 
     private void handleAddComment(HttpServletRequest req, User currentUser, Long topicId) {
         String content = req.getParameter("commentContent");
-        Topic topic = topicDAO.getTopicById(topicId);
+        Topic topic = topicService.getTopicById(topicId);
         commentService.createComment(content, currentUser, topic);
         log.info("User '{}' added a comment to topic ID: {}", currentUser.getUsername(), topicId);
     }

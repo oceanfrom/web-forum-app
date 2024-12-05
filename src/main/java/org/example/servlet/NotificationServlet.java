@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.example.dao.NotificationDAO;
 import org.example.model.Notification;
 import org.example.model.User;
 import org.example.service.NotificationService;
@@ -23,13 +22,11 @@ import java.util.List;
 public class NotificationServlet extends HttpServlet {
     private TemplateEngine templateEngine;
     private NotificationService notificationService;
-    private NotificationDAO notificationDAO;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         templateEngine = ThymeleafConfig.getTemplateEngine();
         notificationService = new NotificationService();
-        notificationDAO = new NotificationDAO();
     }
 
     @Override
@@ -58,7 +55,7 @@ public class NotificationServlet extends HttpServlet {
         }
 
         if (action.equals("notification-delete")) {
-            notificationDAO.deleteNotificationById(notificationId);
+            notificationService.deleteNotificationById(notificationId);
             resp.sendRedirect(req.getContextPath() + "/notifications");
         }
     }
