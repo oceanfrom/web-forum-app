@@ -8,6 +8,14 @@ import java.util.List;
 
 public class TopicDAO {
 
+    public List<Topic> searchByTitle(String title) {
+       return SessionManager.executeReadOnly(session -> {
+            return session.createQuery("SELECT t FROM Topic t WHERE LOWER(t.title) LIKE LOWER(:title)")
+                    .setParameter("title", "%" + title + "%")
+                    .getResultList();
+        });
+    }
+
     public void addTopicById(Topic topic) {
         SessionManager.executeInTransactionWithoutReturn(session -> {
             session.save(topic);

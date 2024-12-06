@@ -7,8 +7,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.example.model.Category;
 import org.example.model.Topic;
 import org.example.model.User;
-import org.example.dao.CategoryDAO;
-import org.example.dao.TopicDAO;
 import org.example.config.ThymeleafConfig;
 import org.example.service.CategoryService;
 import org.example.service.TopicService;
@@ -39,8 +37,14 @@ public class MainPageServlet extends HttpServlet {
         String action = req.getParameter("action");
         User currentUser = (User) req.getSession().getAttribute("user");
         Boolean loggedIn = (Boolean) req.getSession().getAttribute("loggedIn");
+        String searchQuery = req.getParameter("search");
         List<Category> categories = categoryService.getAllCategories();
         List<Topic> topics = getTopicsBasedOnAction(action, req, resp);
+
+        if(searchQuery != null && !searchQuery.isEmpty()) {
+            topics = topicService.searchByTitle(searchQuery);
+            log.info("Search: {}; Topic founds: {}", searchQuery, topics.size());
+        }
 
         Context context = createContextVal(topics, categories, currentUser, loggedIn);
         templateEngine.process("index", context, resp.getWriter());

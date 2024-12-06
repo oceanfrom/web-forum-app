@@ -17,6 +17,10 @@ public class TopicService {
     private TopicDAO topicDAO = new TopicDAO();
     private NotificationService notificationService = new NotificationService();
 
+    public List<Topic> searchByTitle(String title) {
+        return topicDAO.searchByTitle(title);
+    }
+
     public List<Topic> getLikedTopicsByUser(Long id) {
         return topicDAO.getLikedTopicsByUser(id);
     }
