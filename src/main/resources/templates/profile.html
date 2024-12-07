@@ -54,6 +54,12 @@
 <div>
     <h2>Joined on: <span th:text="${#dates.format(user.registrationDate, 'yyyy-MM-dd HH:mm:ss')}"></span></h2>
 </div>
+<div th:if="${currentUser.role.toString().toLowerCase() == 'admin'}">
+    <form action="/profile" method="post">
+        <input type="hidden" name="userId" th:value="${user.id}" />
+        <button type="submit">Delete User</button>
+    </form>
+</div>
 <div>
     <h2>Topics created by <span th:text="${user.username}"></span></h2>
     <ul>

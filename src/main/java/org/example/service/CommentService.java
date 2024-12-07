@@ -18,6 +18,10 @@ public class CommentService {
     private CommentDAO commentDAO = new CommentDAO();
     private NotificationService notificationService = new NotificationService();
 
+    public Comment getCommentById(Long commentId) {
+        return commentDAO.getCommentById(commentId);
+    }
+
     public void deteleCommentById(Long id) {
         commentDAO.deteleCommentById(id);
     }

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login to the Forum</title>
+    <title>Register to the Forum</title>
 </head>
 <style>
     body {
@@ -36,6 +36,7 @@
         margin-bottom: 8px;
     }
 
+    input[type="text"],
     input[type="email"],
     input[type="password"] {
         width: 100%;
@@ -67,18 +68,23 @@
     }
 </style>
 <body>
-<h2>Login to the Forum</h2>
+<h2>Register to the Forum</h2>
 
-<form method="post" action="/login">
+<form method="post" action="/register">
     <div>
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required></div>
-    <div>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required minlength="6">
+        <label for="username">Username (First Last):</label>
+        <input type="text" id="username" name="username" required>
     </div>
     <div>
-        <button type="submit">Enter</button>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+    </div>
+    <div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required minlength="6" maxlength="15">
+    </div>
+    <div>
+        <button type="submit">Register</button>
     </div>
 </form>
 <div th:if="${errorMessage}" class="error-message">

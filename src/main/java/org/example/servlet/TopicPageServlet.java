@@ -78,7 +78,7 @@ public class TopicPageServlet extends HttpServlet {
                     resp.sendRedirect(req.getRequestURI());
                     break;
                 case "delete-topic":
-                    handleDeleteTopic(req, currentUser);
+                    handleDeleteTopic(req, resp, currentUser);
                     resp.sendRedirect("/forum");
                     break;
             }
@@ -127,10 +127,17 @@ public class TopicPageServlet extends HttpServlet {
         topicService.updateRating(topicId, currentUser, false);
     }
 
-    private void handleDeleteTopic(HttpServletRequest req, User currentUser) throws IdParserUtils.InvalidIdException {
+    private void handleDeleteTopic(HttpServletRequest req, HttpServletResponse resp, User currentUser) throws IdParserUtils.InvalidIdException, IOException {
         Long topicId = IdParserUtils.parseId(req.getParameter("topicId"));
-        topicService.deleteTopicById(topicId);
-        log.info("User {} deleted topic {}", currentUser, topicId);
+        Topic topic = topicService.getTopicById(topicId);
+        if (topic.getCreatedBy().equals(currentUser) || "admin".equalsIgnoreCase(currentUser.getRole().toString())) {
+            topicService.deleteTopicById(topicId);
+            log.info("User '{}' deleted topic '{}'", currentUser.getUsername(), topicId);
+        } else {
+            log.warn("User '{}' attempted to delete topic '{}' without correct rights", currentUser.getUsername(), topicId);
+            resp.sendRedirect(req.getContextPath() + "/error");
+        }
     }
+
 
 }

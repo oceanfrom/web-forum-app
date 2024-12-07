@@ -7,6 +7,10 @@ import java.util.List;
 
 public class CommentDAO {
 
+    public Comment getCommentById(Long commentId) {
+        return SessionManager.executeReadOnly(session -> session.get(Comment.class, commentId));
+    }
+
     public void addCommentById(Comment comment) {
          SessionManager.executeInTransactionWithoutReturn(session -> {
             session.save(comment);

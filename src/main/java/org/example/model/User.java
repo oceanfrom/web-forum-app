@@ -21,7 +21,7 @@ public class User {
     private String username;
 
     @NotBlank(message = "Password cannot be blank")
-    @Size(min = 6, max = 15, message = "Password must be between 6 and 15 characters")
+    @Size(min = 6, message = "Password must be at least 6 characters")
     private String password;
 
     @NotBlank(message = "Email cannot be blank")
@@ -30,4 +30,14 @@ public class User {
 
     @Column(name = "registration_date")
     private Timestamp registrationDate;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+
+    @PrePersist
+    void onCreate() {
+        if (registrationDate == null) {
+            registrationDate = new Timestamp(System.currentTimeMillis());
+        }
+    }
 }

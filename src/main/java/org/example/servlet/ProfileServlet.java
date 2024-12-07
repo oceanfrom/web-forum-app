@@ -58,13 +58,35 @@ public class ProfileServlet extends HttpServlet {
         }
         List<Topic> createdTopics = topicService.getCreatedTopicsByUser(user.getId());
 
-        Context context = createContextVal(user, createdTopics);
+        Context context = createContextVal(currentUser, user, createdTopics);
         templateEngine.process("profile", context, resp.getWriter());
         log.info("Successfully rendered profile page for user {}", userId);
     }
 
-    private Context createContextVal(User user, List<Topic> createdTopics) {
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        try {
+            handleDeleteUser(req, resp);
+        } catch (IdParserUtils.InvalidIdException e) {
+            resp.sendRedirect(req.getContextPath() + "/error");
+        }
+    }
+
+    private void handleDeleteUser(HttpServletRequest req, HttpServletResponse resp) throws IOException, IdParserUtils.InvalidIdException {
+        User currentUser = (User) req.getSession().getAttribute("user");
+        Long userId = IdParserUtils.parseId(req.getParameter("userId"));
+        if (currentUser != null && "admin".equals(currentUser.getRole().toString().toLowerCase())) {
+            userService.deleteUserById(userId);
+            resp.sendRedirect(req.getContextPath() + "/users");
+        } else {
+            log.warn("Unauthorized attempt to delete user.");
+            resp.sendRedirect(req.getContextPath() + "/error");
+        }
+    }
+
+        private Context createContextVal(User currentUser, User user, List<Topic> createdTopics) {
         Context context = new Context();
+        context.setVariable("currentUser", currentUser);
         context.setVariable("user", user);
         context.setVariable("createdTopics", createdTopics);
         return context;

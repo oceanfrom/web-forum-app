@@ -6,7 +6,10 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import org.example.dao.UserDAO;
+import org.example.model.Role;
 import org.example.model.User;
+import org.example.utils.PasswordEncoder;
+
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -14,7 +17,15 @@ import java.util.stream.Collectors;
 public class UserService {
     private UserDAO userDAO = new UserDAO();
     ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-    private Validator validator = factory.getValidator();;
+    private Validator validator = factory.getValidator();
+
+    public void deleteUserById(Long userId) {
+        userDAO.deleteUserById(userId);
+    }
+
+    public void saveUser(User user) {
+        userDAO.saveUser(user);
+    }
 
     public User getUserByEmail(String email) {
         return userDAO.getUserByEmail(email);
@@ -40,9 +51,27 @@ public class UserService {
 
     public String authenticateUser(String email, String password) {
         User user = userDAO.getUserByEmail(email);
-        if (user == null || !user.getPassword().equals(password)) {
+        if (user == null || !PasswordEncoder.checkPassword(password, user.getPassword())) {
             return "Invalid email or password";
         }
+        return null;
+    }
+
+    @Transactional
+    public String registerUser(User user) {
+        if (getUserByEmail(user.getEmail()) != null) {
+            return "Email already in use.";
+        }
+        String hashedPassword = PasswordEncoder.hashPassword(user.getPassword());
+        user.setPassword(hashedPassword);
+        user.setRole(Role.USER);
+
+        String validationError = validateUser(user);
+        if (validationError != null) {
+            return validationError;
+        }
+
+        saveUser(user);
         return null;
     }
 
@@ -57,7 +86,9 @@ public class UserService {
     }
 
     public String updatePassword(User currentUser, String newPassword) {
-        currentUser.setPassword(newPassword);
+        String hashedPassword = PasswordEncoder.hashPassword(newPassword);
+        currentUser.setPassword(hashedPassword);
+
         String validationError = validateUser(currentUser);
         if (validationError != null) {
             return validationError;
@@ -84,5 +115,4 @@ public class UserService {
         User userWithEmail = userDAO.getUserByEmail(email);
         return userWithEmail == null || userWithEmail.getId().equals(currentUser.getId());
     }
-
 }

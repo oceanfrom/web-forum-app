@@ -78,6 +78,7 @@
             background-color: #2980b9;
             transform: scale(1.05);
         }
+
         .comment-buttons form {
             display: inline-block;
             margin-bottom: 10px;
@@ -154,9 +155,9 @@
         <p><strong>Category:</strong> <span th:text="${topic.category.name}"></span></p>
         <p><strong>Likes:</strong> <span th:text="${topic.likes}"></span></p>
         <p><strong>Dislikes:</strong> <span th:text="${topic.dislikes}"></span></p>
-        <div th:if="${loggedIn and topicCreator.username == currentUser.username}">
+        <div th:if="${loggedIn and (topicCreator.username == currentUser.username or currentUser.role.toString().toLowerCase() == 'admin')}">
             <form method="post">
-                <input type="hidden" name="topicId" th:value="${topic.id}" />
+                <input type="hidden" name="topicId" th:value="${topic.id}"/>
                 <button type="submit" name="action" value="delete-topic">Delete Topic</button>
             </form>
         </div>
@@ -186,22 +187,22 @@
                 <p>Dislikes: <span th:text="${comment.dislikes}">0</span></p>
                 <div class="comment-buttons" th:if="${loggedIn}">
                     <form action="/comment" method="post">
-                        <input type="hidden" name="action" value="like-comment" />
+                        <input type="hidden" name="action" value="like-comment"/>
                         <input type="hidden" name="commentId" th:value="${comment.id}"/>
-                        <input type="hidden" name="topicId" th:value="${topic.id}" />
+                        <input type="hidden" name="topicId" th:value="${topic.id}"/>
                         <button type="submit">Like</button>
                     </form>
                     <form action="/comment" method="post">
-                        <input type="hidden" name="action" value="dislike-comment" />
+                        <input type="hidden" name="action" value="dislike-comment"/>
                         <input type="hidden" name="commentId" th:value="${comment.id}"/>
-                        <input type="hidden" name="topicId" th:value="${topic.id}" />
+                        <input type="hidden" name="topicId" th:value="${topic.id}"/>
                         <button type="submit">Dislike</button>
                     </form>
-                    <div th:if="${loggedIn and topicCreator.username == currentUser.username}">
+                    <div th:if="${loggedIn and topicCreator.username == currentUser.username or currentUser.role.toString().toLowerCase() == 'admin'}">
                         <form action="/comment" method="post">
                             <input type="hidden" name="action" value="delete-comment"/>
-                            <input type="hidden" name="commentId" th:value="${comment.id}" />
-                            <input type="hidden" name="topicId" th:value="${topic.id}" />
+                            <input type="hidden" name="commentId" th:value="${comment.id}"/>
+                            <input type="hidden" name="topicId" th:value="${topic.id}"/>
                             <button type="submit">Delete</button>
                         </form>
                     </div>
@@ -215,7 +216,7 @@
     <div class="add-comment" th:if="${loggedIn}">
         <h3>Add comment</h3>
         <form action="/comment" method="post">
-            <input type="hidden" name="action" value="add-comment" />
+            <input type="hidden" name="action" value="add-comment"/>
             <input type="hidden" name="topicId" th:value="${topic.id}"/>
             <textarea name="commentContent" rows="4" placeholder="Enter your comment" required></textarea>
             <button type="submit" name="action" value="addComment">Send</button>

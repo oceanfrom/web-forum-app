@@ -9,7 +9,6 @@ public class HibernateConfig {
 
     @Getter
     private static SessionFactory sessionFactory;
-
     static {
         try {
             sessionFactory = new Configuration().configure("hibernate.cfg.xml")
@@ -20,6 +19,7 @@ public class HibernateConfig {
                     .addAnnotatedClass(CommentRating.class)
                     .addAnnotatedClass(Category.class)
                     .addAnnotatedClass(Notification.class)
+                    .addAnnotatedClass(Role.class)
                     .buildSessionFactory();
         } catch (Exception e) {
             e.printStackTrace();

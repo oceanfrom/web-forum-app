@@ -61,7 +61,7 @@ public class TopicService {
         topic.setCategory(category);
         topic.setCreatedBy(user);
         topic.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
-        topicDAO.addTopicById(topic);
+        topicDAO.saveTopic(topic);
     }
 
     public void updateRating(Long topicId, User user, boolean isLike) {

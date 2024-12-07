@@ -16,7 +16,7 @@ public class TopicDAO {
         });
     }
 
-    public void addTopicById(Topic topic) {
+    public void saveTopic(Topic topic) {
         SessionManager.executeInTransactionWithoutReturn(session -> {
             session.save(topic);
         });

@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.example.model.Comment;
 import org.example.model.Topic;
 import org.example.model.User;
 import org.example.service.CommentService;
@@ -43,7 +44,7 @@ public class CommentServlet extends HttpServlet {
                     resp.sendRedirect("/topic/" + topicId);
                     break;
                 case "delete-comment":
-                    handleDeleteComment(req, currentUser);
+                    handleDeleteComment(req, resp, currentUser);
                     resp.sendRedirect("/topic/" + topicId);
                     break;
                 case "add-comment":
@@ -70,11 +71,18 @@ public class CommentServlet extends HttpServlet {
         commentService.updateRating(commentId, currentUser, false);
     }
 
-    private void handleDeleteComment(HttpServletRequest req, User currentUser) throws IdParserUtils.InvalidIdException {
+    private void handleDeleteComment(HttpServletRequest req, HttpServletResponse resp, User currentUser) throws IdParserUtils.InvalidIdException, IOException {
         Long commentId = IdParserUtils.parseId(req.getParameter("commentId"));
-        log.info("User '{}' is deleting comment with ID: {}", currentUser.getUsername(), commentId);
-        commentService.deteleCommentById(commentId);
+        Comment comment = commentService.getCommentById(commentId);
+        if (comment.getCreatedBy().equals(currentUser) || "admin".equalsIgnoreCase(currentUser.getRole().toString())) {
+            commentService.deteleCommentById(commentId);
+            log.info("User '{}' deleted comment '{}'", currentUser.getUsername(), commentId);
+        } else {
+            log.warn("User '{}' attempted to delete comment '{}' without correct rights", currentUser.getUsername(), commentId);
+            resp.sendRedirect(req.getContextPath() + "/error");
+        }
     }
+
 
     private void handleAddComment(HttpServletRequest req, User currentUser, Long topicId) {
         String content = req.getParameter("commentContent");
