@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${topic.title}">Topic</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #eef2f7;
+            color: #444;
+        }
+
+        .header {
+            background-color: #34495e;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            text-transform: uppercase;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .topic {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+            margin-bottom: 20px;
+        }
+
+        .topic p {
+            font-size: 16px;
+            color: #555;
+            margin: 10px 0;
+        }
+
+        .content {
+            font-size: 18px;
+            color: #333;
+            background-color: #f9f9f9;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            text-align: center;
+            line-height: 1.6;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
+        }
+
+        .buttons {
+            display: flex;
+            margin-right: 10px;
+        }
+
+        .buttons button {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 5px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .buttons button:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+        }
+
+        .comment-buttons form {
+            display: inline-block;
+            margin-bottom: 10px;
+            vertical-align: top;
+        }
+
+        .comments, .add-comment {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .comments h3, .add-comment h3 {
+            font-size: 22px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .comments ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .comments li {
+            background-color: #f9f9f9;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .comments p {
+            margin: 5px 0;
+        }
+
+        .comment-buttons form {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1 th:text="${topic.title}">Created by</h1>
+</div>
+<div class="buttons">
+    <form action="/forum" method="get" style="position: absolute;">
+        <button type="submit">Go to Forum</button>
+    </form>
+</div>
+<div class="container">
+    <div class="topic">
+        <p><strong>Author:</strong> <span th:text="${topicCreator.username}"></span></p>
+        <p><strong>Category:</strong> <span th:text="${topic.category.name}"></span></p>
+        <p><strong>Likes:</strong> <span th:text="${topic.likes}"></span></p>
+        <p><strong>Dislikes:</strong> <span th:text="${topic.dislikes}"></span></p>
+        <div th:if="${loggedIn and (topicCreator.username == currentUser.username or currentUser.role.toString().toLowerCase() == 'admin')}">
+            <form method="post">
+                <input type="hidden" name="topicId" th:value="${topic.id}"/>
+                <button type="submit" name="action" value="delete-topic">Delete Topic</button>
+            </form>
+        </div>
+        <div class="content" th:text="${topic.content}">
+            Topic content here...
+        </div>
+        <div class="buttons" th:if="${loggedIn}">
+            <form method="post">
+                <input type="hidden" name="topicId" th:value="${topic.id}"/>
+                <button type="submit" name="action" value="like-topic">Like</button>
+            </form>
+            <form method="post">
+                <input type="hidden" name="topicId" th:value="${topic.id}"/>
+                <button type="submit" name="action" value="dislike-topic">Dislike</button>
+            </form>
+        </div>
+    </div>
+    <div class="comments">
+        <h3>Comments:</h3>
+        <ul>
+            <li th:each="comment : ${comments}">
+                <p><strong>
+                    <a th:href="'/profile/' + ${comment.createdBy.id}" th:text="${comment.createdBy.username}"></a>:
+                </strong></p>
+                <p th:text="${comment.content}">Comment</p>
+                <p>Likes: <span th:text="${comment.likes}">0</span></p>
+                <p>Dislikes: <span th:text="${comment.dislikes}">0</span></p>
+                <div class="comment-buttons" th:if="${loggedIn}">
+                    <form action="/comment" method="post">
+                        <input type="hidden" name="action" value="like-comment"/>
+                        <input type="hidden" name="commentId" th:value="${comment.id}"/>
+                        <input type="hidden" name="topicId" th:value="${topic.id}"/>
+                        <button type="submit">Like</button>
+                    </form>
+                    <form action="/comment" method="post">
+                        <input type="hidden" name="action" value="dislike-comment"/>
+                        <input type="hidden" name="commentId" th:value="${comment.id}"/>
+                        <input type="hidden" name="topicId" th:value="${topic.id}"/>
+                        <button type="submit">Dislike</button>
+                    </form>
+                    <div th:if="${loggedIn and (topicCreator.username == currentUser.username or currentUser.role.toString().toLowerCase() == 'admin')}">
+                        <form action="/comment" method="post">
+                            <input type="hidden" name="commentId" th:value="${comment.id}"/>
+                            <input type="hidden" name="topicId" th:value="${topic.id}"/>
+                            <button type="submit" name="action" value="delete-comment">Delete</button>
+                        </form>
+                    </div>
+
+                </div>
+            </li>
+        </ul>
+        <div th:if="${#lists.isEmpty(comments)}">
+            <p>No comments yet</p>
+        </div>
+    </div>
+    <div class="add-comment" th:if="${loggedIn}">
+        <h3>Add comment</h3>
+        <form action="/comment" method="post">
+            <input type="hidden" name="action" value="add-comment"/>
+            <input type="hidden" name="topicId" th:value="${topic.id}"/>
+            <textarea name="commentContent" rows="4" placeholder="Enter your comment" required></textarea>
+            <button type="submit" name="action" value="addComment">Send</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

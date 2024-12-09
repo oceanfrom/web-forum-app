@@ -26,4 +26,11 @@ public class Topic {
     private Timestamp createdAt;
     private int likes;
     private int dislikes;
+
+    @PrePersist
+    void onCreate() {
+        if (createdAt == null) {
+            createdAt = new Timestamp(System.currentTimeMillis());
+        }
+    }
 }

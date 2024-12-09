@@ -1,17 +1,10 @@
 package org.example.service;
 
-import org.example.dao.CategoryDAO;
+import org.example.repository.CategoryRepository;
 import org.example.model.Category;
 import java.util.List;
 
-public class CategoryService {
-    private CategoryDAO categoryDAO = new CategoryDAO();
-
-    public Category getCategoryById(Long id) {
-        return categoryDAO.getCategoryById(id);
-    }
-
-    public List<Category> getAllCategories() {
-        return categoryDAO.getAllCategories();
-    }
+public interface CategoryService {
+    Category getCategoryById(Long id);
+    List<Category> getAllCategories();
 }

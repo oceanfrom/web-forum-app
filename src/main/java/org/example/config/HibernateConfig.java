@@ -1,7 +1,9 @@
 package org.example.config;
 
 import lombok.Getter;
+import org.example.factory.NotificationFactory;
 import org.example.model.*;
+import org.example.model.enumiration.Role;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 

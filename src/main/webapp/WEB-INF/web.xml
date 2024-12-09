@@ -6,7 +6,7 @@
   <display-name>Archetype Created Web Application</display-name>
   <servlet>
     <servlet-name>indexServlet</servlet-name>
-    <servlet-class>org.example.servlet.RedirectServlet</servlet-class>
+    <servlet-class>org.example.controller.main.RedirectServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>indexServlet</servlet-name>

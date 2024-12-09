@@ -1,47 +1,82 @@
-
 # WEB-FORUM-APP
-## Project Architecture
+
+A modern web forum application built using **Java**, **PostgreSQL**, and **Thymeleaf** for dynamic content rendering. This app allows users to create, comment on, and interact with topics while providing an intuitive, engaging user experience.
+
+---
+
+## 🏗️ Project Architecture
+
 ### Frontend
-HTML templates using Thymeleaf for dynamic page generation.
-CSS for styling.
+- **HTML Templates**: Dynamic page generation using **Thymeleaf**.
+- **CSS**: Custom styles for a clean and responsive design.
+
 ### Backend
-Use Java Servlet API for request handling.
-Data processing logic (for entities).
-### Database (PostgreSQL)
-ORM: Hibernate for database interaction.
-Database structure includes relationships between entities
+- **Java Servlet API**: Handles requests and business logic.
+- **Data Processing Logic**: Manages entities and their relationships.
+
+### Database: PostgreSQL
+- **ORM**: **Hibernate** for seamless database interactions.
+- **Database Structure**: Includes complex relationships between entities.
+
+---
+
+## 📅 Development Plan
+
+### 1. Environment Setup and Project Structure - **November 27, 2024** (done)
+- Install **PostgreSQL** and configure the database.
+- Set up the project structure (directories, base classes).
+- Configure **Hibernate** and test the database connection.
+
+### 2. Topic Functionality Implementation - **December 1, 2024** (done)
+- Display a **topic list** on the homepage.
+- Implement **navigation** to individual topic pages.
+- **Login System**: Secure user authentication.
+- **Like/Dislike System**: Allow users to react to topics.
+- **Comment System**:
+    - Add, delete, like/dislike comments.
+- Enable **topic deletion** by the author.
+
+### 3. User Dashboard - **December 2, 2024** (done)
+- Add sections for **"My Topics"** and **"Tracked (liked) Topics"**.
+- Allow users to **update their profile** and information.
+- Implement **roles** (User, Admin):
+    - **Admin Features**: Delete topics, delete comments, delete users.
+- **User Profile Viewing**: Allow users to view profiles of other users, including:
+    - **Registration date**.
+    - **Topics created** by the user.
 
 
+### 4. Notifications - **December 4, 2024** (done)
+- Implement notifications for:
+    - New **likes** on topics.
+    - New **comments** on a user’s topics.
+- Display notifications in the **user dashboard**.
 
-## Development Plan
-#### 1. Environment Setup and Project Structure - November 27, 2024
-   - Install PostgreSQL and configure the database.
-   - Create the project structure (directories, base classes).
-   - Set up Hibernate and test the database connection. 
-#### 2. Topic Functionality Implementation - December 1, 2024
-   - Implement the topic list on the main page.
-   - Add navigation to individual topic pages with detailed content display.
-   - Implement login system
-   - Integrate a like/dislike system for topics.
-   - Develop the comment system:
-   - Add, delete, like/dislike comments.
-   - Enable topic deletion by the author.
-#### 3. User dashboard - December 2, 2024
-   - Add sections for "My Topics" and "Tracked Topics."
-   - Change user info
-   - Added roles(user, admin)
-   - Admin func: delete topics, block users
-#### 4. Notifications - December 4, 2024
-   - Implement logic for notifications about:
-   - New likes on topics.
-   - New comments on the user's topics.
-   - Display notifications in the user dashboard.
-#### 5. Sorting - December 5, 2024
-   - Implement sorting options for topics:
-   - Most popular (by likes).
-   - Least popular (by dislikes).
-   - By category.
-#### 6. Search and Pagination - December 6, 2024
-   - Implement search functionality by topic title on the main page.
-   - Configure pagination for topics and comments.
-#### 7. Registration - December 8, 2024
+### 5. Sorting - **December 5, 2024** (done)
+- Implement sorting options for topics:
+    - **Most Popular** (by likes).
+    - **Least Popular** (by dislikes).
+    - Sort by **category**.
+
+### 6. Search - **December 6, 2024** (done)
+- **Search** functionality by **topic title**.
+
+### 7. Registration - **December 8, 2024** (done)
+- Implement user **registration** and authentication process.
+
+### 8. Search user, improve forum navigation - **December 10, 2024** (in process)
+- Add user search, improve the transition between pages
+---
+
+## 🚀 Getting Started
+
+### Prerequisites:
+- **Java 11** or later.
+- **PostgreSQL** database.
+- **Maven** for project dependencies.
+- IDE (e.g., IntelliJ IDEA, Eclipse).
+
+### Setup:
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/web-forum-app.git

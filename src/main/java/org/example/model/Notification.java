@@ -26,7 +26,14 @@ public class Notification {
     @ManyToOne
     @JoinColumn(name = "comment_id")
     private Comment comment;
-    private Timestamp timestamp;
+    @Column(name = "created_at")
+    private Timestamp createdAt;
 
+    @PrePersist
+    void onCreate() {
+        if (createdAt == null) {
+            createdAt = new Timestamp(System.currentTimeMillis());
+        }
+    }
 
 }

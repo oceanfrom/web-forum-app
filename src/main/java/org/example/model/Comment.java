@@ -21,9 +21,15 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "topic_id", nullable = false)
     private Topic topic;
+    @Column(name = "created_at")
     private Timestamp createdAt;
     private int likes;
     private int dislikes;
 
-
+    @PrePersist
+    void onCreate() {
+        if (createdAt == null) {
+            createdAt = new Timestamp(System.currentTimeMillis());
+        }
+    }
 }

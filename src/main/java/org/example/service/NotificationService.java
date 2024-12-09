@@ -1,6 +1,6 @@
 package org.example.service;
 
-import org.example.dao.NotificationDAO;
+import org.example.repository.NotificationRepository;
 import org.example.model.Comment;
 import org.example.model.Notification;
 import org.example.model.Topic;
@@ -8,33 +8,9 @@ import org.example.model.User;
 import java.sql.Timestamp;
 import java.util.List;
 
-public class NotificationService {
-    private NotificationDAO notificationDAO = new NotificationDAO();
-
-    public void deleteNotificationById(Long id) {
-        notificationDAO.deleteNotificationById(id);
-    }
-
-    public void createLikeNotification(User createdBy, Topic topic) {
-        Notification notification = new Notification();
-        notification.setType(Notification.TYPE_LIKE_TOPIC);
-        notification.setCreatedBy(createdBy);
-        notification.setTopic(topic);
-        notification.setTimestamp(new Timestamp(System.currentTimeMillis()));
-        notificationDAO.addNotificationById(notification);
-    }
-
-    public void createCommentNotification(User createdBy, Topic topic, Comment comment) {
-        Notification notification = new Notification();
-        notification.setType(Notification.TYPE_COMMENT_TOPIC);
-        notification.setCreatedBy(createdBy);
-        notification.setTopic(topic);
-        notification.setComment(comment);
-        notification.setTimestamp(new Timestamp(System.currentTimeMillis()));
-        notificationDAO.addNotificationById(notification);
-    }
-
-    public List<Notification> getUserNotifications(Long userId) {
-        return notificationDAO.getNotificationsByUserId(userId);
-    }
+public interface NotificationService {
+    public void deleteNotificationById(Long id);
+    void createLikeNotification(User createdBy, Topic topic);
+    void createCommentNotification(User createdBy, Topic topic, Comment comment);
+    List<Notification> getUserNotifications(Long userId);
 }

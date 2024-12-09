@@ -1,14 +1,17 @@
 package org.example.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import org.example.model.enumiration.Role;
 
 import java.sql.Timestamp;
 
 @Getter
 @Setter
+@EqualsAndHashCode
 @Entity
 @Table(name = "users")
 public class User {

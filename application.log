@@ -1,0 +1,7 @@
+2024-12-09 01:59:45 [http-nio-8080-exec-4] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.0.Final
+2024-12-09 01:59:46 [http-nio-8080-exec-4] INFO  o.hibernate.orm.connections.access - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@62262606] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2024-12-09 01:59:46 [http-nio-8080-exec-4] INFO  o.e.servlet.main.MainPageServlet - Successfully rendered /forum page with 9 topics.
+2024-12-09 02:07:53 [http-nio-8080-exec-6] INFO  o.example.servlet.auth.LoginServlet - Login page rendered successfully.
+2024-12-09 02:08:05 [http-nio-8080-exec-7] INFO  o.example.servlet.auth.LoginServlet - User john.doe@example.com logged in successfully.
+2024-12-09 02:08:05 [http-nio-8080-exec-8] INFO  o.e.servlet.main.MainPageServlet - Successfully rendered /forum page with 9 topics.
+2024-12-09 02:08:06 [http-nio-8080-exec-9] INFO  o.example.servlet.user.UsersServlet - Successfully rendered users page for user: 'John Doe'.

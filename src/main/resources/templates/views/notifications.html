@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Notifications</title>
+</head>
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #eef2f7;
+        color: #444;
+    }
+
+    .header {
+        background-color: #34495e;
+        color: white;
+        padding: 20px 0;
+        text-align: center;
+        font-size: 28px;
+        font-weight: bold;
+        text-transform: uppercase;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .notification {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        margin-bottom: 20px;
+    }
+
+    .notification p {
+        font-size: 16px;
+        color: #555;
+        margin: 10px 0;
+    }
+
+    .buttons {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 10px;
+    }
+
+    .buttons button {
+        background-color: #3498db;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .buttons button:hover {
+        background-color: #2980b9;
+        transform: scale(1.05);
+    }
+</style>
+<body>
+<div class="header">
+    <h1>Notifications</h1>
+</div>
+<div class="container">
+    <div th:each="notification : ${notifications}">
+        <div class="notification">
+            <p><strong>Notification:</strong></p>
+            <span class="username" th:text="${notification.createdBy.username}">User</span>
+            <span th:switch="${notification.type}">
+                    <span th:case="'LIKE_TOPIC'">liked your</span>
+                    <span th:case="'COMMENT_TOPIC'">commented your</span>
+                </span>
+            <a th:href="'/topic/' + ${notification.topic.id}" th:text="${notification.topic.title}">Topic</a>.
+            <p th:text="${#dates.format(notification.getCreatedAt , 'yyyy-MM-dd HH:mm:ss')}"></p>
+            <form action="/notifications" method="post">
+                <input type="hidden" name="action" value="notification-delete" />
+                <input type="hidden" name="notificationId" th:value="${notification.id}" />
+                <button type="submit" class="delete-button">Delete</button>
+            </form>
+        </div>
+    </div>
+    <div th:if="${#lists.isEmpty(notifications)}">
+        <p>No notifications yet</p>
+    </div>
+    <div class="buttons">
+        <form action="/forum" method="get">
+            <button type="submit">Go to forum</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
