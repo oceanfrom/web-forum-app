@@ -30,7 +30,6 @@ public class TopicRatingServiceImpl implements TopicRatingService {
 
             if (isNewLike && isLike) {
                 notificationService.createLikeNotification(user, topic);
-                log.info("NOTIFICATION LIKE BY USER {} IN TOPIC {} SEND", user, topic);
             }
         });
     }

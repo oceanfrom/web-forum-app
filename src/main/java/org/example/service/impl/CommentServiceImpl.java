@@ -2,6 +2,7 @@ package org.example.service.impl;
 
 import jakarta.transaction.Transactional;
 import org.example.factory.CommentFactory;
+import org.example.factory.impl.CommentFactoryImpl;
 import org.example.model.Comment;
 import org.example.model.Topic;
 import org.example.model.User;
@@ -16,7 +17,7 @@ public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository = new CommentRepositoryImpl();
     private final NotificationService notificationService = new NotificationServiceImpl();
-    private final CommentFactory commentFactory = new CommentFactory();
+    private final CommentFactory commentFactory = new CommentFactoryImpl();
 
     @Override
     public Comment getCommentById(Long commentId) {

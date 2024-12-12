@@ -1,6 +1,7 @@
 package org.example.controller.auth;
 
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +11,6 @@ import org.example.service.AuthService;
 import org.example.service.UserService;
 import org.example.service.impl.AuthServiceImpl;
 import org.example.service.impl.UserServiceImpl;
-import org.example.controller.BaseServlet;
 import org.example.utils.context.ContextGeneration;
 import org.example.utils.context.impl.ContextGenerationImpl;
 import org.thymeleaf.TemplateEngine;
@@ -19,7 +19,7 @@ import java.io.IOException;
 
 @Slf4j
 @WebServlet("/login")
-public class LoginServlet extends BaseServlet {
+public class LoginServlet extends HttpServlet {
     private TemplateEngine templateEngine;
     private UserService userService;
     private AuthService authService;
@@ -35,9 +35,10 @@ public class LoginServlet extends BaseServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        try {
-            redirectIfUserLoggedIn(req, resp);
-        } catch (IOException e) {
+        User currentUser = (User) req.getSession().getAttribute("user");
+        if (currentUser != null) {
+            log.info("User already logged in, redirecting to forum.");
+            resp.sendRedirect("/forum");
             return;
         }
         Context context = new Context();
@@ -61,6 +62,6 @@ public class LoginServlet extends BaseServlet {
         req.getSession().setAttribute("user", user);
         req.getSession().setAttribute("loggedIn", true);
         log.info("User {} logged in successfully.", email);
-        handleRedirect(resp, "/forum");
+        resp.sendRedirect("/forum");
     }
 }

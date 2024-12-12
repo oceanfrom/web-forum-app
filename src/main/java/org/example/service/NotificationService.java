@@ -1,11 +1,9 @@
 package org.example.service;
 
-import org.example.repository.NotificationRepository;
 import org.example.model.Comment;
 import org.example.model.Notification;
 import org.example.model.Topic;
 import org.example.model.User;
-import java.sql.Timestamp;
 import java.util.List;
 
 public interface NotificationService {

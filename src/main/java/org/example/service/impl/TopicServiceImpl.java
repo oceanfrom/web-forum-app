@@ -1,6 +1,7 @@
 package org.example.service.impl;
 
 import org.example.factory.TopicFactory;
+import org.example.factory.impl.TopicFactoryImpl;
 import org.example.model.Category;
 import org.example.model.Topic;
 import org.example.model.User;
@@ -12,7 +13,7 @@ import java.util.List;
 
 public class TopicServiceImpl implements TopicService {
     private final TopicRepository topicRepository = new TopicRepositoryImpl();
-    private final TopicFactory topicFactory = new TopicFactory();
+    private final TopicFactory topicFactory = new TopicFactoryImpl();
 
     @Override
     public List<Topic> searchByTitle(String title) {

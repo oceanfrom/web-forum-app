@@ -7,6 +7,16 @@ import java.util.List;
 
 public class UserRepositoryImpl implements UserRepository {
     @Override
+    public List<User> searchByName(String username) {
+        return SessionManager.executeReadOnly(session -> {
+           return session.createQuery("SELECT u FROM User u WHERE LOWER(u.username) LIKE LOWER(:username) ", User.class)
+                   .setParameter("username", "%" + username + "%")
+
+                   .getResultList();
+        });
+    }
+
+    @Override
     public void deleteUserById(Long userId) {
         SessionManager.executeInTransactionWithoutReturn(session -> {
             User user = session.get(User.class, userId);

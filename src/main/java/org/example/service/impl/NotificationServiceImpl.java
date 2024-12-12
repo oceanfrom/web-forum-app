@@ -1,6 +1,7 @@
 package org.example.service.impl;
 
 import org.example.factory.NotificationFactory;
+import org.example.factory.impl.NotificationFactoryImpl;
 import org.example.model.Comment;
 import org.example.model.Notification;
 import org.example.model.Topic;
@@ -12,7 +13,7 @@ import java.util.List;
 
 public class NotificationServiceImpl implements NotificationService {
     private final NotificationRepository notificationRepository = new NotificationRepositoryImpl();
-    private final NotificationFactory notificationFactory = new NotificationFactory();
+    private final NotificationFactory notificationFactory = new NotificationFactoryImpl();
 
     @Override
     public void deleteNotificationById(Long id) {

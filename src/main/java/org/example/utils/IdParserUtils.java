@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class IdParserUtils {
+    private IdParserUtils() {}
 
     public static Long parseIdWithSubstring(String path) throws InvalidIdException {
         if (path == null || path.isEmpty()) {

@@ -3,7 +3,6 @@ package org.example.service.impl;
 import jakarta.transaction.Transactional;
 import jakarta.validation.*;
 import org.example.model.User;
-import org.example.model.enumiration.Role;
 import org.example.repository.UserRepository;
 import org.example.repository.impl.UserRepositoryImpl;
 import org.example.service.UserService;
@@ -18,6 +17,11 @@ public class UserServiceImpl implements UserService {
 
     ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     private Validator validator = factory.getValidator();
+
+    @Override
+    public List<User> searchByName(String username) {
+        return userRepository.searchByName(username);
+    }
 
     @Override
     public void deleteUserById(Long userId) {

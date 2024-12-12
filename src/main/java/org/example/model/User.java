@@ -8,6 +8,8 @@ import jakarta.validation.constraints.*;
 import org.example.model.enumiration.Role;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -29,10 +31,25 @@ public class User {
 
     @NotBlank(message = "Email cannot be blank")
     @Email(message = "Invalid email address")
+    @Column(unique = true)
     private String email;
+
+    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Topic> topics;
+
+    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments;
+
+    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Notification> notifications;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TopicRating> topicRatings;
+
 
     @Column(name = "registration_date")
     private Timestamp registrationDate;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;

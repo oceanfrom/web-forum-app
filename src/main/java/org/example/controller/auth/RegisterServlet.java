@@ -3,25 +3,25 @@ package org.example.controller.auth;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.example.config.ThymeleafConfig;
 import org.example.factory.UserFactory;
+import org.example.factory.impl.UserFactoryImpl;
 import org.example.model.User;
 import org.example.service.AuthService;
 import org.example.service.impl.AuthServiceImpl;
-import org.example.controller.BaseServlet;
 import org.example.utils.context.ContextGeneration;
 import org.example.utils.context.impl.ContextGenerationImpl;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-
 import java.io.IOException;
 
 @Slf4j
 @WebServlet("/register")
-public class RegisterServlet extends BaseServlet {
+public class RegisterServlet extends HttpServlet {
     private TemplateEngine templateEngine;
     private AuthService authService;
     private UserFactory userFactory;
@@ -31,7 +31,7 @@ public class RegisterServlet extends BaseServlet {
     public void init(ServletConfig config) throws ServletException {
         templateEngine = ThymeleafConfig.getTemplateEngine();
         authService = new AuthServiceImpl();
-        userFactory = new UserFactory();
+        userFactory = new UserFactoryImpl();
         contextGeneration = new ContextGenerationImpl();
     }
 
@@ -57,8 +57,7 @@ public class RegisterServlet extends BaseServlet {
             return;
         }
         log.info("User {} registered successfully.", email);
-        handleRedirect(resp, "/login");
-
+        resp.sendRedirect("/login");
     }
 
 }

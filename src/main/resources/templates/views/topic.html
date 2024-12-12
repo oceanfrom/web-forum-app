@@ -8,129 +8,83 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #eef2f7;
+            background-color: #f5f5f5;
             color: #444;
         }
 
         .header {
-            background-color: #34495e;
+            background-color: #2c3e50;
             color: white;
-            padding: 20px 0;
+            padding: 30px 0;
             text-align: center;
             font-size: 28px;
             font-weight: bold;
-            text-transform: uppercase;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .navbar {
+            background-color: #34495e;
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+        }
+
+        .navbar a {
+            color: white;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+
+        .navbar a:hover {
+            background-color: #1abc9c;
         }
 
         .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
+            width: 85%;
+            max-width: 1200px;
+            margin: 40px auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 30px;
         }
 
         .topic {
-            background-color: white;
-            padding: 40px;
+            background-color: #ffffff;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
             border-radius: 10px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .topic h3 {
+            font-size: 24px;
+            color: #3498db;
         }
 
         .topic p {
             font-size: 16px;
             color: #555;
-            margin: 10px 0;
         }
 
-        .content {
-            font-size: 18px;
-            color: #333;
-            background-color: #f9f9f9;
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 8px;
-            text-align: center;
-            line-height: 1.6;
-            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            white-space: normal;
+        .topic a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .topic a:hover {
+            color: #2980b9;
         }
 
         .buttons {
+            margin-top: 20px;
             display: flex;
-            margin-right: 10px;
+            gap: 10px;
         }
 
         .buttons button {
-            background-color: #3498db;
-            color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            margin: 5px;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-
-        .buttons button:hover {
-            background-color: #2980b9;
-            transform: scale(1.05);
-        }
-
-        .comment-buttons form {
-            display: inline-block;
-            margin-bottom: 10px;
-            vertical-align: top;
-        }
-
-        .comments, .add-comment {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-
-        .comments h3, .add-comment h3 {
-            font-size: 22px;
-            color: #2c3e50;
-            margin-bottom: 15px;
-        }
-
-        .comments ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .comments li {
-            background-color: #f9f9f9;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .comments p {
-            margin: 5px 0;
-        }
-
-        .comment-buttons form {
-            display: inline-block;
-            margin-right: 10px;
-        }
-
-        textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-            margin-bottom: 15px;
-        }
-
-        button {
             background-color: #3498db;
             color: white;
             padding: 10px 20px;
@@ -140,27 +94,119 @@
             transition: background-color 0.3s ease;
         }
 
-        button:hover {
+        .buttons button:hover {
+            background-color: #2980b9;
+        }
+
+        .content {
+            font-size: 16px;
+            color: #555;
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        .comments {
+            margin-top: 40px;
+        }
+
+        .comments h3 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .comments ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .comments li {
+            background-color: #f9f9f9;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .comment-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .comment-buttons button {
+            background-color: #3498db;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .comment-buttons button:hover {
+            background-color: #2980b9;
+        }
+
+        .add-comment {
+            margin-top: 40px;
+        }
+
+        .add-comment h3 {
+            font-size: 22px;
+            color: #2c3e50;
+        }
+
+        .add-comment textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            resize: vertical;
+        }
+
+        .add-comment button {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .add-comment button:hover {
             background-color: #2980b9;
         }
     </style>
 </head>
 <body>
 <div class="header">
-    <h1 th:text="${topic.title}">Created by</h1>
+    <h1 th:text="${topic.title}">Topic</h1>
 </div>
-<div class="buttons">
-    <form action="/forum" method="get" style="position: absolute;">
-        <button type="submit">Go to Forum</button>
-    </form>
+
+<div class="navbar">
+    <a th:if="${not loggedIn}" href="/register">Registration</a>
+    <a th:if="${not loggedIn}" href="/login">Login</a>
+    <a th:if="${loggedIn}" href="/users">Users</a>
+    <a th:if="${loggedIn}" href="/notifications">Notifications</a>
+    <a th:if="${loggedIn}" href="/account">My account</a>
+    <a th:if="${loggedIn}" href="/logout">Logout</a>
+    <a href="/forum">Go to forum</a>
 </div>
+
 <div class="container">
     <div class="topic">
         <p><strong>Author:</strong> <span th:text="${topicCreator.username}"></span></p>
         <p><strong>Category:</strong> <span th:text="${topic.category.name}"></span></p>
         <p><strong>Likes:</strong> <span th:text="${topic.likes}"></span></p>
         <p><strong>Dislikes:</strong> <span th:text="${topic.dislikes}"></span></p>
-        <div th:if="${loggedIn and (topicCreator.username == currentUser.username or currentUser.role.toString().toLowerCase() == 'admin')}">
+        <div class="buttons"
+             th:if="${loggedIn and (topicCreator.username == currentUser.username or currentUser.role.toString().toLowerCase() == 'admin')}">
             <form method="post">
                 <input type="hidden" name="topicId" th:value="${topic.id}"/>
                 <button type="submit" name="action" value="delete-topic">Delete Topic</button>
@@ -180,13 +226,13 @@
             </form>
         </div>
     </div>
+
     <div class="comments">
         <h3>Comments:</h3>
         <ul>
             <li th:each="comment : ${comments}">
-                <p><strong>
-                    <a th:href="'/profile/' + ${comment.createdBy.id}" th:text="${comment.createdBy.username}"></a>:
-                </strong></p>
+                <p><strong><a th:href="'/profile/' + ${comment.createdBy.id}"
+                              th:text="${comment.createdBy.username}"></a>:</strong></p>
                 <p th:text="${comment.content}">Comment</p>
                 <p>Likes: <span th:text="${comment.likes}">0</span></p>
                 <p>Dislikes: <span th:text="${comment.dislikes}">0</span></p>
@@ -210,7 +256,6 @@
                             <button type="submit" name="action" value="delete-comment">Delete</button>
                         </form>
                     </div>
-
                 </div>
             </li>
         </ul>
@@ -218,6 +263,7 @@
             <p>No comments yet</p>
         </div>
     </div>
+
     <div class="add-comment" th:if="${loggedIn}">
         <h3>Add comment</h3>
         <form action="/comment" method="post">

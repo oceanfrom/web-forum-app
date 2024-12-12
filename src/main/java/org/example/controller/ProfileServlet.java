@@ -1,11 +1,9 @@
-package org.example.controller.user;
+package org.example.controller;
 
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.example.service.actions.ActionHandler;
-import org.example.service.actions.manager.ActionManagerImpl;
-import org.example.service.actions.impl.user.DeleteUserHandler;
 import org.example.model.Topic;
 import org.example.model.User;
 import org.example.config.ThymeleafConfig;
@@ -13,26 +11,22 @@ import org.example.service.TopicService;
 import org.example.service.UserService;
 import org.example.service.impl.TopicServiceImpl;
 import org.example.service.impl.UserServiceImpl;
-import org.example.controller.BaseServlet;
+import org.example.utils.IdParserUtils;
 import org.example.utils.context.ContextGeneration;
 import org.example.utils.context.impl.ContextGenerationImpl;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @WebServlet("/profile/*")
-public class ProfileServlet extends BaseServlet {
+public class ProfileServlet extends HttpServlet {
     private TemplateEngine templateEngine;
     private UserService userService;
     private TopicService topicService;
     private ContextGeneration contextGeneration;
-    private ActionManagerImpl actionManagerImpl;
-    private Map<String, ActionHandler> actions;
 
     @Override
     public void init() {
@@ -40,30 +34,32 @@ public class ProfileServlet extends BaseServlet {
         userService = new UserServiceImpl();
         topicService = new TopicServiceImpl();
         contextGeneration = new ContextGenerationImpl();
-        actions = new HashMap<>();
-        actions.put("delete-user", new DeleteUserHandler());
-        actionManagerImpl = new ActionManagerImpl(actions);
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        User currentUser = getCurrentUser(req);
-        try {
-            ensureUserLoggedIn(resp,currentUser);
-        } catch (IOException e) {
+        User currentUser = (User) req.getSession().getAttribute("user");
+        if (currentUser == null) {
+            log.warn("User not logged in, redirecting to login page.");
+            resp.sendRedirect("/login");
             return;
         }
-
-        Long userId = parseIdWithSubstring(req,resp);
+        Long userId = null;
+        try {
+            userId = IdParserUtils.parseIdWithSubstring(req.getPathInfo());
+        } catch (IdParserUtils.InvalidIdException e) {
+            log.error("Error parsing ID", e);
+            resp.sendRedirect(req.getContextPath() + "/error");
+        }
         User user = userService.getUserById(userId);
         if (user == null) {
             log.warn("User not found with ID: {}", userId);
-            handleError(resp);
+            resp.sendRedirect(req.getContextPath() + "/error");
             return;
         }
         if (currentUser.getId().equals(user.getId())) {
             log.info("Current user is the same as the profile user, redirecting to /account");
-            handleRedirect(resp, "/account");
+            resp.sendRedirect(req.getContextPath() + "/account");
             return;
         }
         List<Topic> createdTopics = topicService.getCreatedTopicsByUser(user.getId());
@@ -74,12 +70,24 @@ public class ProfileServlet extends BaseServlet {
         log.info("Successfully rendered profile page for user {}", userId);
     }
 
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String action = req.getParameter("action");
-        User currentUser = getCurrentUser(req);
-        actionManagerImpl.handleAction(req,resp, currentUser);
+        try {
+            handleDeleteUser(req, resp);
+        } catch (IdParserUtils.InvalidIdException e) {
+            resp.sendRedirect(req.getContextPath() + "/error");
+        }
     }
 
+    private void handleDeleteUser(HttpServletRequest req, HttpServletResponse resp) throws IOException, IdParserUtils.InvalidIdException {
+        User currentUser = (User) req.getSession().getAttribute("user");
+        Long userId = IdParserUtils.parseId(req.getParameter("userId"));
+        if (currentUser != null && "admin".equals(currentUser.getRole().toString().toLowerCase())) {
+            userService.deleteUserById(userId);
+            resp.sendRedirect(req.getContextPath() + "/users");
+        } else {
+            log.warn("Unauthorized attempt to delete user.");
+            resp.sendRedirect(req.getContextPath() + "/error");
+        }
+    }
 }

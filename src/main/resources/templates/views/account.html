@@ -3,148 +3,189 @@
 <head>
     <meta charset="UTF-8">
     <title>My Account</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #444;
+        }
+
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .navbar {
+            background-color: #34495e;
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+        }
+
+        .navbar a {
+            color: white;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+
+        .navbar a:hover {
+            background-color: #1abc9c;
+        }
+
+        .container {
+            width: 85%;
+            max-width: 1200px;
+            margin: 40px auto;
+        }
+
+        .user-info, .topics {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .user-info h2, .topics h2 {
+            font-size: 26px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .user-info form p, .topics ul {
+            margin-bottom: 20px;
+        }
+
+        .user-info form input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .user-info form button {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .user-info form button:hover {
+            background-color: #2980b9;
+        }
+
+        .topics ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .topics li {
+            margin-bottom: 15px;
+        }
+
+        .topics a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .topics a:hover {
+            color: #2980b9;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .no-topics {
+            text-align: center;
+            font-size: 18px;
+            margin-top: 30px;
+            color: #888;
+        }
+
+    </style>
 </head>
-<style>
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #f5f5f5;
-        color: #444;
-    }
-
-    h1 {
-        font-size: 32px;
-        color: #2c3e50;
-        text-align: center;
-        margin-top: 30px;
-    }
-
-    h2 {
-        font-size: 22px;
-        color: #2c3e50;
-        margin-top: 30px;
-    }
-
-    form {
-        background-color: white;
-        padding: 20px;
-        margin-bottom: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-
-    form p {
-        margin-bottom: 15px;
-    }
-
-    label {
-        font-size: 16px;
-        font-weight: bold;
-        color: #2c3e50;
-    }
-
-    input[type="text"],
-    input[type="password"],
-    input[type="email"] {
-        width: 100%;
-        padding: 10px;
-        font-size: 16px;
-        margin-top: 5px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-    }
-
-    button {
-        background-color: #3498db;
-        color: white;
-        padding: 12px 25px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: background-color 0.3s ease, transform 0.3s ease;
-        margin-top: 10px;
-    }
-
-    button:hover {
-        background-color: #2980b9;
-    }
-
-    details {
-        margin-top: 20px;
-    }
-
-    ul {
-        list-style-type: none;
-        padding: 0;
-    }
-
-    ul li {
-        margin-bottom: 10px;
-    }
-
-    ul li a {
-        color: #3498db;
-        text-decoration: none;
-    }
-
-    ul li a:hover {
-        color: #2980b9;
-    }
-
-</style>
 <body>
-<h1>My Account</h1>
-<div>
-    <h2>User Information</h2>
-    <details>
-        <summary>Click to view/update your information</summary>
-        <form action="/account" method="post">
-            <p>
-                <label for="username">Name:</label>
-                <input type="hidden" name="action" value="update-username"/>
-                <input type="text" id="username" name="username" th:value="${user.username}" required maxlength="50"/>
-            </p>
-            <button type="submit">Update Name</button>
-        </form>
-        <form action="/account" method="post">
-            <p>
-                <label for="password">Password:</label>
-                <input type="hidden" name="action" value="update-password"/>
-                <input type="password" id="password" name="password" required minlength="6"/>
-            </p>
-            <button type="submit">Update Password</button>
-        </form>
-        <form action="/account" method="post">
-            <p>
-                <label for="email">Email:</label>
-                <input type="hidden" name="action" value="update-email"/>
-                <input type="email" id="email" name="email" th:value="${user.email}" required maxlength="100"/>
-            </p>
-            <button type="submit">Update Email</button>
-        </form>
-        <div th:if="${errorMessage != null}">
-            <p style="color: red;" th:text="${errorMessage}"></p>
-        </div>
-    </details>
+<div class="header">
+    My Account
 </div>
-<div>
-    <h2>Topics created by you</h2>
-    <ul>
-        <li th:each="topic : ${createdTopics}">
-            <a th:href="'/topic/' + ${topic.id}" th:text="${topic.title}">Topic Title</a>
-        </li>
-    </ul>
-    <p th:if="${#lists.isEmpty(createdTopics)}">You haven't created any topics yet.</p>
+<div class="navbar">
+    <a href="/users">Users</a>
+    <a href="/notifications">Notifications</a>
+    <a href="/logout">Logout</a>
+    <a href="/forum">Go to forum</a>
 </div>
-<div>
-    <h2>Topics you liked</h2>
-    <ul>
-        <li th:each="topic : ${likedTopics}">
-            <a th:href="'/topic/' + ${topic.id}" th:text="${topic.title}">Topic Title</a>
-        </li>
-    </ul>
-    <p th:if="${#lists.isEmpty(likedTopics)}">You haven't liked any topics yet.</p>
+<div class="container">
+    <div class="user-info">
+        <h2>User Information</h2>
+        <details>
+            <summary>Click to view/update your information</summary>
+            <form action="/account" method="post">
+                <p>
+                    <label for="username">Name:</label>
+                    <input type="hidden" name="action" value="update-username"/>
+                    <input type="text" id="username" name="username" th:value="${user.username}" required maxlength="50"/>
+                </p>
+                <button type="submit">Update Name</button>
+            </form>
+            <form action="/account" method="post">
+                <p>
+                    <label for="password">Password:</label>
+                    <input type="hidden" name="action" value="update-password"/>
+                    <input type="password" id="password" name="password" required minlength="6"/>
+                </p>
+                <button type="submit">Update Password</button>
+            </form>
+            <form action="/account" method="post">
+                <p>
+                    <label for="email">Email:</label>
+                    <input type="hidden" name="action" value="update-email"/>
+                    <input type="email" id="email" name="email" th:value="${user.email}" required maxlength="100"/>
+                </p>
+                <button type="submit">Update Email</button>
+            </form>
+            <div th:if="${errorMessage != null}">
+                <p class="error-message" th:text="${errorMessage}"></p>
+            </div>
+        </details>
+    </div>
+
+    <div class="topics">
+        <h2>Topics created by you</h2>
+        <ul>
+            <li th:each="topic : ${createdTopics}">
+                <a th:href="'/topic/' + ${topic.id}" th:text="${topic.title}">Topic Title</a>
+            </li>
+        </ul>
+        <p th:if="${#lists.isEmpty(createdTopics)}">You haven't created any topics yet.</p>
+    </div>
+
+    <div class="topics">
+        <h2>Topics you liked</h2>
+        <ul>
+            <li th:each="topic : ${likedTopics}">
+                <a th:href="'/topic/' + ${topic.id}" th:text="${topic.title}">Topic Title</a>
+            </li>
+        </ul>
+    </div>
+    <div class="no-topics">
+        <p th:if="${#lists.isEmpty(likedTopics)}">You haven't liked any topics yet.</p>
+    </div>
 </div>
 </body>
 </html>

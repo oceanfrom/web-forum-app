@@ -1,27 +1,27 @@
-package org.example.controller.error;
+package org.example.controller;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.config.ThymeleafConfig;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 
-@WebServlet("/error")
-public class ErrorServlet extends HttpServlet {
+@Slf4j
+public class RedirectServlet extends HttpServlet {
     private TemplateEngine templateEngine;
 
     @Override
-    public void init(){
+    public void init() {
         templateEngine = ThymeleafConfig.getTemplateEngine();
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Context context = new Context();
-        templateEngine.process("error", context, resp.getWriter());
+        templateEngine.process("welcomepage", context, response.getWriter());
+        log.info("Successfully rendered welcome page.");
     }
 }
