@@ -9,6 +9,13 @@ import java.util.List;
 public class NotificationRepositoryImpl implements NotificationRepository {
 
     @Override
+    public void deleteAllNotifications() {
+        SessionManager.executeInTransactionWithoutReturn(session -> {
+            session.createQuery("DELETE FROM Notification").executeUpdate();
+        });
+    }
+
+    @Override
     public void deleteNotificationById(Long notificationId) {
         SessionManager.executeInTransactionWithoutReturn(session -> {
             Notification notification = session.get(Notification.class, notificationId);

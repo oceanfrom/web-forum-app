@@ -76,7 +76,21 @@ A modern web forum application built using **Java**, **PostgreSQL**, and **Thyme
 - **Maven** for project dependencies.
 - IDE (e.g., IntelliJ IDEA, Eclipse).
 
+### Endpoints:
+- Register: http://localhost:8080/register
+- Login: http://localhost:8080/login
+- Forum Home: http://localhost:8080/forum - Displays the list of topics.
+- Topic Page: http://localhost:8080/topic/id - Individual topic page.
+- User Account: http://localhost:8080/account - View and update your profile.
+- User Profile: http://localhost:8080/profile/id - View user profile.
+- Users List: http://localhost:8080/users - List of all users.
+- Notifications: http://localhost:8080/notifications - User notifications for new likes and comments.
+
 ### Setup:
 1. Clone the repository:
    ```bash
    git clone https://github.com/yourusername/web-forum-app.git
+2. Open docker desktop(If you don't have it, download it)
+    ```bash
+   project-path/docker-compose build
+   project-path/docker-compose up

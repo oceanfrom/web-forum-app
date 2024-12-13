@@ -5,6 +5,8 @@ import org.example.model.Notification;
 import java.util.List;
 
 public interface NotificationRepository {
+    void deleteAllNotifications();
+
     void deleteNotificationById(Long notificationId);
 
     void saveNotification(Notification notification);

@@ -53,14 +53,17 @@ public class NotificationServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String action = req.getParameter("action");
-        Long notificationId = null;
-        try {
-            notificationId = parseId(req.getParameter("notificationId"));
-        } catch (IdParserUtils.InvalidIdException e) {
-            resp.sendRedirect("/error");
-        }
         if (action.equals("notification-delete")) {
+            Long notificationId = null;
+            try {
+                notificationId = parseId(req.getParameter("notificationId"));
+            } catch (IdParserUtils.InvalidIdException e) {
+                resp.sendRedirect("/error");
+            }
             notificationService.deleteNotificationById(notificationId);
+            resp.sendRedirect("/notifications");
+        } else if (action.equals("all-notification-delete")) {
+            notificationService.deleteAllNotifications();
             resp.sendRedirect("/notifications");
         }
     }

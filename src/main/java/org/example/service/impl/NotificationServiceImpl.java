@@ -16,6 +16,11 @@ public class NotificationServiceImpl implements NotificationService {
     private final NotificationFactory notificationFactory = new NotificationFactoryImpl();
 
     @Override
+    public void deleteAllNotifications() {
+        notificationRepository.deleteAllNotifications();
+    }
+
+    @Override
     public void deleteNotificationById(Long id) {
         notificationRepository.deleteNotificationById(id);
     }

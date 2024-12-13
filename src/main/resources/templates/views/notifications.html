@@ -50,6 +50,23 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
+        .delete-all-button {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .delete-all-button:hover {
+            background-color: #2980b9;
+        }
+
+
         .notification {
             background-color: #f9f9f9;
             padding: 20px;
@@ -114,6 +131,10 @@
     <a href="/logout">Logout</a>
     <a href="/forum">Go to forum</a></div>
 <div class="container">
+    <form th:if="${!(#lists.isEmpty(notifications))}" class="no-notifications" action="/notifications" method="post">
+        <input type="hidden" name="action" value="all-notification-delete"/>
+        <button type="submit" class="delete-all-button">Delete all</button>
+    </form>
     <div th:each="notification : ${notifications}" class="notification">
         <div>
             <p>

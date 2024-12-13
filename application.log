@@ -5,3 +5,104 @@
 2024-12-09 02:08:05 [http-nio-8080-exec-7] INFO  o.example.servlet.auth.LoginServlet - User john.doe@example.com logged in successfully.
 2024-12-09 02:08:05 [http-nio-8080-exec-8] INFO  o.e.servlet.main.MainPageServlet - Successfully rendered /forum page with 9 topics.
 2024-12-09 02:08:06 [http-nio-8080-exec-9] INFO  o.example.servlet.user.UsersServlet - Successfully rendered users page for user: 'John Doe'.
+2024-12-13 19:17:47 [http-nio-8080-exec-2] INFO  o.example.controller.RedirectServlet - Successfully rendered welcome page.
+2024-12-13 19:17:47 [http-nio-8080-exec-1] INFO  o.example.controller.RedirectServlet - Successfully rendered welcome page.
+2024-12-13 19:17:47 [http-nio-8080-exec-3] INFO  o.example.controller.RedirectServlet - Successfully rendered welcome page.
+2024-12-13 19:17:54 [http-nio-8080-exec-4] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.3.Final
+2024-12-13 19:17:55 [http-nio-8080-exec-4] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-12-13 19:17:55 [http-nio-8080-exec-4] WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2024-12-13 19:17:56 [http-nio-8080-exec-4] WARN  org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-13 19:17:56 [http-nio-8080-exec-4] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/onlineforum_db]
+	Database driver: org.postgresql.Driver
+	Database version: 16.4
+	Autocommit mode: false
+	Isolation level: undefined/unknown
+	Minimum pool size: 1
+	Maximum pool size: 20
+2024-12-13 19:17:57 [http-nio-8080-exec-4] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.0.Final
+2024-12-13 19:17:59 [http-nio-8080-exec-4] INFO  o.hibernate.orm.connections.access - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@aceadc1] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2024-12-13 19:18:00 [http-nio-8080-exec-4] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 23505
+2024-12-13 19:18:00 [http-nio-8080-exec-4] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - ОШИБКА: повторяющееся значение ключа нарушает ограничение уникальности "uk6dotkott2kjsp8vw4d0m25fb7"
+  Подробности: Ключ "(email)=(john.doe@example.com)" уже существует.
+2024-12-13 19:18:00 [http-nio-8080-exec-4] WARN  o.example.controller.MainPageServlet - Action parameter is missing, defaulting to 'all-topics'.
+2024-12-13 19:18:00 [http-nio-8080-exec-4] INFO  o.example.controller.MainPageServlet - Get all topics.
+2024-12-13 19:18:01 [http-nio-8080-exec-4] INFO  o.example.controller.MainPageServlet - Successfully rendered /forum page with 10 topics.
+2024-12-13 19:18:03 [http-nio-8080-exec-5] INFO  o.e.controller.auth.LoginServlet - Login page rendered successfully.
+2024-12-13 19:18:10 [http-nio-8080-exec-6] INFO  o.e.controller.auth.LoginServlet - User john.doe@example.com logged in successfully.
+2024-12-13 19:18:10 [http-nio-8080-exec-7] WARN  o.example.controller.MainPageServlet - Action parameter is missing, defaulting to 'all-topics'.
+2024-12-13 19:18:10 [http-nio-8080-exec-7] INFO  o.example.controller.MainPageServlet - Get all topics.
+2024-12-13 19:18:10 [http-nio-8080-exec-7] INFO  o.example.controller.MainPageServlet - Successfully rendered /forum page with 10 topics.
+2024-12-13 19:18:13 [http-nio-8080-exec-9] INFO  o.e.controller.TopicPageServlet - Successfully processed GET request for topicId 3
+2024-12-13 19:18:15 [http-nio-8080-exec-10] INFO  o.e.controller.TopicPageServlet - User org.example.model.User@6ed529de liked topic 3
+2024-12-13 19:18:15 [http-nio-8080-exec-2] INFO  o.e.controller.TopicPageServlet - Successfully processed GET request for topicId 3
+2024-12-13 19:18:18 [http-nio-8080-exec-1] INFO  o.example.controller.CommentServlet - User 'John Doe' added a comment to topic ID: 3
+2024-12-13 19:18:18 [http-nio-8080-exec-3] INFO  o.e.controller.TopicPageServlet - Successfully processed GET request for topicId 3
+2024-12-13 19:18:26 [http-nio-8080-exec-5] INFO  o.example.controller.CommentServlet - User 'John Doe' deleted comment '14'
+2024-12-13 19:18:26 [http-nio-8080-exec-6] INFO  o.e.controller.TopicPageServlet - Successfully processed GET request for topicId 3
+2024-12-13 19:18:28 [http-nio-8080-exec-7] INFO  o.example.controller.CommentServlet - User 'John Doe' added a comment to topic ID: 3
+2024-12-13 19:18:28 [http-nio-8080-exec-8] INFO  o.e.controller.TopicPageServlet - Successfully processed GET request for topicId 3
+2024-12-13 19:18:30 [http-nio-8080-exec-9] INFO  o.e.controller.TopicPageServlet - User org.example.model.User@6ed529de liked topic 3
+2024-12-13 19:18:30 [http-nio-8080-exec-10] INFO  o.e.controller.TopicPageServlet - Successfully processed GET request for topicId 3
+2024-12-13 19:19:29 [http-nio-8080-exec-1] INFO  o.example.controller.RedirectServlet - Successfully rendered welcome page.
+2024-12-13 19:19:29 [http-nio-8080-exec-2] INFO  o.example.controller.RedirectServlet - Successfully rendered welcome page.
+2024-12-13 19:19:30 [http-nio-8080-exec-3] INFO  o.example.controller.RedirectServlet - Successfully rendered welcome page.
+2024-12-13 19:19:32 [http-nio-8080-exec-4] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.3.Final
+2024-12-13 19:19:32 [http-nio-8080-exec-4] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-12-13 19:19:33 [http-nio-8080-exec-4] WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2024-12-13 19:19:33 [http-nio-8080-exec-4] WARN  org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-13 19:19:33 [http-nio-8080-exec-4] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/onlineforum_db]
+	Database driver: org.postgresql.Driver
+	Database version: 16.4
+	Autocommit mode: false
+	Isolation level: undefined/unknown
+	Minimum pool size: 1
+	Maximum pool size: 20
+2024-12-13 19:19:35 [http-nio-8080-exec-4] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.0.Final
+2024-12-13 19:19:37 [http-nio-8080-exec-4] INFO  o.hibernate.orm.connections.access - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@10a3de3e] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2024-12-13 19:19:37 [http-nio-8080-exec-4] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 23505
+2024-12-13 19:19:37 [http-nio-8080-exec-4] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - ОШИБКА: повторяющееся значение ключа нарушает ограничение уникальности "uk6dotkott2kjsp8vw4d0m25fb7"
+  Подробности: Ключ "(email)=(john.doe@example.com)" уже существует.
+2024-12-13 19:19:38 [http-nio-8080-exec-4] WARN  o.example.controller.MainPageServlet - Action parameter is missing, defaulting to 'all-topics'.
+2024-12-13 19:19:38 [http-nio-8080-exec-4] INFO  o.example.controller.MainPageServlet - Get all topics.
+2024-12-13 19:19:38 [http-nio-8080-exec-4] INFO  o.example.controller.MainPageServlet - Successfully rendered /forum page with 10 topics.
+2024-12-13 19:19:42 [http-nio-8080-exec-5] INFO  o.e.controller.auth.LoginServlet - Login page rendered successfully.
+2024-12-13 19:19:47 [http-nio-8080-exec-6] WARN  o.e.controller.auth.LoginServlet - Authentication failed: Invalid email or password
+2024-12-13 19:19:53 [http-nio-8080-exec-7] INFO  o.e.controller.auth.LoginServlet - User john.doe@example.com logged in successfully.
+2024-12-13 19:19:53 [http-nio-8080-exec-8] WARN  o.example.controller.MainPageServlet - Action parameter is missing, defaulting to 'all-topics'.
+2024-12-13 19:19:53 [http-nio-8080-exec-8] INFO  o.example.controller.MainPageServlet - Get all topics.
+2024-12-13 19:19:53 [http-nio-8080-exec-8] INFO  o.example.controller.MainPageServlet - Successfully rendered /forum page with 10 topics.
+2024-12-13 19:19:56 [http-nio-8080-exec-9] INFO  o.e.controller.TopicPageServlet - Successfully processed GET request for topicId 10
+2024-12-13 19:20:00 [http-nio-8080-exec-10] INFO  o.example.controller.CommentServlet - User 'John Doe' added a comment to topic ID: 10
+2024-12-13 19:20:00 [http-nio-8080-exec-2] INFO  o.e.controller.TopicPageServlet - Successfully processed GET request for topicId 10
+2024-12-13 19:20:08 [http-nio-8080-exec-3] INFO  o.example.controller.CommentServlet - User 'John Doe' added a comment to topic ID: 10
+2024-12-13 19:20:08 [http-nio-8080-exec-4] INFO  o.e.controller.TopicPageServlet - Successfully processed GET request for topicId 10
+2024-12-13 19:22:46 [http-nio-8080-exec-1] INFO  o.example.controller.RedirectServlet - Successfully rendered welcome page.
+2024-12-13 19:22:46 [http-nio-8080-exec-2] INFO  o.example.controller.RedirectServlet - Successfully rendered welcome page.
+2024-12-13 19:22:46 [http-nio-8080-exec-3] INFO  o.example.controller.RedirectServlet - Successfully rendered welcome page.
+2024-12-13 19:23:17 [http-nio-8080-exec-6] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.3.Final
+2024-12-13 19:23:17 [http-nio-8080-exec-6] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-12-13 19:23:18 [http-nio-8080-exec-6] WARN  o.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2024-12-13 19:23:18 [http-nio-8080-exec-6] WARN  org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-13 19:23:18 [http-nio-8080-exec-6] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/onlineforum_db]
+	Database driver: org.postgresql.Driver
+	Database version: 16.4
+	Autocommit mode: false
+	Isolation level: undefined/unknown
+	Minimum pool size: 1
+	Maximum pool size: 20
+2024-12-13 19:23:20 [http-nio-8080-exec-6] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.0.Final
+2024-12-13 19:23:22 [http-nio-8080-exec-6] INFO  o.hibernate.orm.connections.access - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@27e88c04] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2024-12-13 19:23:22 [http-nio-8080-exec-6] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 23505
+2024-12-13 19:23:22 [http-nio-8080-exec-6] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - ОШИБКА: повторяющееся значение ключа нарушает ограничение уникальности "uk6dotkott2kjsp8vw4d0m25fb7"
+  Подробности: Ключ "(email)=(john.doe@example.com)" уже существует.
+2024-12-13 19:23:23 [http-nio-8080-exec-6] WARN  o.example.controller.MainPageServlet - Action parameter is missing, defaulting to 'all-topics'.
+2024-12-13 19:23:23 [http-nio-8080-exec-6] INFO  o.example.controller.MainPageServlet - Get all topics.
+2024-12-13 19:23:23 [http-nio-8080-exec-6] INFO  o.example.controller.MainPageServlet - Successfully rendered /forum page with 10 topics.
+2024-12-13 19:23:25 [http-nio-8080-exec-5] INFO  o.e.controller.auth.LoginServlet - Login page rendered successfully.
+2024-12-13 19:23:30 [http-nio-8080-exec-7] INFO  o.e.controller.auth.LoginServlet - User john.doe@example.com logged in successfully.
+2024-12-13 19:23:30 [http-nio-8080-exec-8] WARN  o.example.controller.MainPageServlet - Action parameter is missing, defaulting to 'all-topics'.
+2024-12-13 19:23:30 [http-nio-8080-exec-8] INFO  o.example.controller.MainPageServlet - Get all topics.
+2024-12-13 19:23:30 [http-nio-8080-exec-8] INFO  o.example.controller.MainPageServlet - Successfully rendered /forum page with 10 topics.
