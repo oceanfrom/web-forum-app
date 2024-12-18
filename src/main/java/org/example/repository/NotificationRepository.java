@@ -10,11 +10,11 @@ import java.util.List;
 public interface NotificationRepository {
     Notification findNotificationForRating(Session session, Topic topic, TopicRating rating);
 
-    void deleteAllNotifications();
+    void deleteAllNotifications(Session session);
 
-    void deleteNotificationById(Long notificationId);
+    void deleteNotificationById(Session session, Long notificationId);
 
-    void saveNotification(Notification notification);
+    void saveNotification(Session session, Notification notification);
 
-    List<Notification> getNotificationsByUserId(Long userId);
+    List<Notification> getNotificationsByUserId(Session session, Long userId);
 }

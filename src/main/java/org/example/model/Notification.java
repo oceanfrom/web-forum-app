@@ -4,8 +4,11 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.model.enumiration.NotificationType;
+import org.hibernate.annotations.Cascade;
 
 import java.sql.Timestamp;
+
+import static jakarta.persistence.CascadeType.ALL;
 
 @Getter
 @Setter

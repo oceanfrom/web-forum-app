@@ -4,6 +4,7 @@ import org.example.model.Category;
 import org.example.repository.CategoryRepository;
 import org.example.repository.impl.CategoryRepositoryImpl;
 import org.example.service.CategoryService;
+import org.example.transaction.SessionManager;
 
 import java.util.List;
 
@@ -12,11 +13,11 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category getCategoryById(Long id) {
-        return categoryRepository.getCategoryById(id);
+        return SessionManager.executeReadOnly(session -> categoryRepository.getCategoryById(session, id));
     }
 
     @Override
     public List<Category> getAllCategories() {
-        return categoryRepository.getAllCategories();
+        return SessionManager.executeReadOnly(session -> categoryRepository.getAllCategories(session));
     }
 }

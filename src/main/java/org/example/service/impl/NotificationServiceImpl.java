@@ -6,6 +6,7 @@ import org.example.model.*;
 import org.example.repository.NotificationRepository;
 import org.example.repository.impl.NotificationRepositoryImpl;
 import org.example.service.NotificationService;
+import org.example.transaction.SessionManager;
 import org.hibernate.Session;
 
 import java.util.List;
@@ -21,28 +22,30 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public void deleteAllNotifications() {
-        notificationRepository.deleteAllNotifications();
+        SessionManager.executeInTransactionWithoutReturn(session -> notificationRepository.deleteAllNotifications(session));
     }
 
     @Override
     public void deleteNotificationById(Long id) {
-        notificationRepository.deleteNotificationById(id);
+        SessionManager.executeInTransactionWithoutReturn(session -> notificationRepository.deleteNotificationById(session, id));
     }
 
     @Override
     public void createLikeNotification(User createdBy, Topic topic) {
-        Notification notification = notificationFactory.createLikeNotification(createdBy, topic);
-        notificationRepository.saveNotification(notification);
+        SessionManager.executeInTransactionWithoutReturn(session -> {
+            Notification notification = notificationFactory.createLikeNotification(createdBy, topic);
+            notificationRepository.saveNotification(session, notification);
+        });
     }
 
     @Override
-    public void createCommentNotification(User createdBy, Topic topic, Comment comment) {
-        Notification notification = notificationFactory.createCommentNotification(createdBy, topic, comment);
-        notificationRepository.saveNotification(notification);
+    public void createCommentNotification(Session session, User createdBy, Topic topic, Comment comment) {
+            Notification notification = notificationFactory.createCommentNotification(createdBy, topic, comment);
+            notificationRepository.saveNotification(session, notification);
     }
 
     @Override
     public List<Notification> getUserNotifications(Long userId) {
-        return notificationRepository.getNotificationsByUserId(userId);
+        return SessionManager.executeReadOnly(session -> notificationRepository.getNotificationsByUserId(session, userId));
     }
 }

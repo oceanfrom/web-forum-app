@@ -111,12 +111,6 @@
             margin-top: 10px;
         }
 
-        .no-topics {
-            text-align: center;
-            font-size: 18px;
-            margin-top: 30px;
-            color: #888;
-        }
 
     </style>
 </head>
@@ -182,8 +176,6 @@
                 <a th:href="'/topic/' + ${topic.id}" th:text="${topic.title}">Topic Title</a>
             </li>
         </ul>
-    </div>
-    <div class="no-topics">
         <p th:if="${#lists.isEmpty(likedTopics)}">You haven't liked any topics yet.</p>
     </div>
 </div>

@@ -8,23 +8,23 @@ import org.hibernate.Session;
 import java.util.List;
 
 public interface TopicRepository {
-    List<Topic> searchByTitle(String title);
+    List<Topic> searchByTitle(Session session, String title);
 
-    void saveTopic(Topic topic);
+    void saveTopic(Session session, Topic topic);
 
-    void deleteTopicById(Long topicId);
+    void deleteTopicById(Session session, Long topicId);
 
-    List<Topic> getAllTopicsByLikes();
+    List<Topic> getAllTopicsByLikes(Session session);
 
-    List<Topic> getAllTopicsByDislikes();
+    List<Topic> getAllTopicsByDislikes(Session session);
 
-    List<Topic> getAllTopicsByCategoryId(Long categoryId);
+    List<Topic> getAllTopicsByCategoryId(Session session, Long categoryId);
 
-    List<Topic> getCreatedTopicsByUser(Long userId);
+    List<Topic> getCreatedTopicsByUser(Session session, Long userId);
 
-    List<Topic> getLikedTopicsByUser(Long userId);
+    List<Topic> getLikedTopicsByUser(Session session, Long userId);
 
-    List<Topic> getAllTopics();
+    List<Topic> getAllTopics(Session session);
 
-    Topic getTopicById(Long id);
+    Topic getTopicById(Session session, Long id);
 }

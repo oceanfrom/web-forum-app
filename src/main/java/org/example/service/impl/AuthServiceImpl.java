@@ -1,10 +1,10 @@
 package org.example.service.impl;
 
-import jakarta.transaction.Transactional;
 import org.example.model.User;
 import org.example.model.enumiration.Role;
 import org.example.service.AuthService;
 import org.example.service.UserService;
+import org.example.transaction.SessionManager;
 import org.example.utils.PasswordEncoder;
 
 public class AuthServiceImpl implements AuthService {
@@ -19,17 +19,17 @@ public class AuthServiceImpl implements AuthService {
         return null;
     }
 
-    @Transactional
     @Override
     public String registerUser(User user) {
-        if (userService.getUserByEmail(user.getEmail()) != null) {
-            return "Email already in use.";
-        }
-        String hashedPassword = PasswordEncoder.hashPassword(user.getPassword());
-        user.setPassword(hashedPassword);
-        user.setRole(Role.USER);
-        userService.saveUser(user);
-        return null;
+        return SessionManager.executeInTransaction(session -> {
+            if (userService.getUserByEmail(session, user.getEmail()) != null) {
+                return "Email already in use.";
+            }
+            String hashedPassword = PasswordEncoder.hashPassword(user.getPassword());
+            user.setPassword(hashedPassword);
+            user.setRole(Role.USER);
+            userService.saveUser(session, user);
+            return null;
+        });
     }
-
 }

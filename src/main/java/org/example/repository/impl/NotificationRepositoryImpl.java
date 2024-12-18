@@ -20,33 +20,27 @@ public class NotificationRepositoryImpl implements NotificationRepository {
     }
 
     @Override
-    public void deleteAllNotifications() {
-        SessionManager.executeInTransactionWithoutReturn(session -> {
-            session.createQuery("DELETE FROM Notification").executeUpdate();
-        });
+    public void deleteAllNotifications(Session session) {
+        session.createQuery("DELETE FROM Notification").executeUpdate();
     }
 
     @Override
-    public void deleteNotificationById(Long notificationId) {
-        SessionManager.executeInTransactionWithoutReturn(session -> {
-            Notification notification = session.get(Notification.class, notificationId);
-            if (notification == null)
-                return;
-            session.delete(notification);
-        });
+    public void deleteNotificationById(Session session, Long notificationId) {
+        Notification notification = session.get(Notification.class, notificationId);
+        if (notification == null)
+            return;
+        session.delete(notification);
     }
 
     @Override
-    public void saveNotification(Notification notification) {
-        SessionManager.executeInTransactionWithoutReturn(session -> session.save(notification));
+    public void saveNotification(Session session, Notification notification) {
+        session.save(notification);
     }
 
     @Override
-    public List<Notification> getNotificationsByUserId(Long userId) {
-        return SessionManager.executeReadOnly(session -> {
-            return session.createQuery("FROM Notification WHERE topic.createdBy.id = :userId ORDER BY createdAt DESC", Notification.class)
-                    .setParameter("userId", userId)
-                    .getResultList();
-        });
+    public List<Notification> getNotificationsByUserId(Session session, Long userId) {
+        return session.createQuery("FROM Notification WHERE topic.createdBy.id = :userId ORDER BY createdAt DESC", Notification.class)
+                .setParameter("userId", userId)
+                .getResultList();
     }
 }

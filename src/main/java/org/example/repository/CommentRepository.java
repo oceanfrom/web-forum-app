@@ -1,16 +1,17 @@
 package org.example.repository;
 
 import org.example.model.*;
+import org.hibernate.Session;
 
 import java.util.List;
 
 public interface CommentRepository {
-    void deleteCommentById(Long commentId);
+    void deleteCommentById(Session session, Long commentId);
 
-    void saveComment(Comment comment);
+    void saveComment(Session session, Comment comment);
 
-    Comment getCommentById(Long commentId);
+    Comment getCommentById(Session session, Long commentId);
 
-    List<Comment> getCommentsByTopicId(Long topicId);
+    List<Comment> getCommentsByTopicId(Session session, Long topicId);
 }
 

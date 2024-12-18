@@ -1,12 +1,13 @@
 package org.example.service.impl;
 
-import jakarta.transaction.Transactional;
 import jakarta.validation.*;
 import org.example.model.User;
 import org.example.repository.UserRepository;
 import org.example.repository.impl.UserRepositoryImpl;
 import org.example.service.UserService;
+import org.example.transaction.SessionManager;
 import org.example.utils.PasswordEncoder;
+import org.hibernate.Session;
 
 import java.util.List;
 import java.util.Set;
@@ -20,32 +21,37 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> searchByName(String username) {
-        return userRepository.searchByName(username);
+        return SessionManager.executeReadOnly(session -> userRepository.searchByName(session, username));
     }
 
     @Override
     public void deleteUserById(Long userId) {
-        userRepository.deleteUserById(userId);
+        SessionManager.executeInTransactionWithoutReturn(session -> userRepository.deleteUserById(session, userId));
     }
 
     @Override
-    public void saveUser(User user) {
-        userRepository.saveUser(user);
+    public void saveUser(Session session, User user) {
+        userRepository.saveUser(session, user);
+    }
+
+    @Override
+    public User getUserByEmail(Session session, String email) {
+        return userRepository.getUserByEmail(session, email);
     }
 
     @Override
     public User getUserByEmail(String email) {
-        return userRepository.getUserByEmail(email);
+        return SessionManager.executeReadOnly(session -> userRepository.getUserByEmail(session, email));
     }
 
     @Override
     public User getUserById(Long id) {
-        return userRepository.getUserById(id);
+        return SessionManager.executeReadOnly(session -> userRepository.getUserById(session, id));
     }
 
     @Override
     public List<User> getAllUsers() {
-        return userRepository.getAllUsers();
+        return SessionManager.executeReadOnly(userRepository::getAllUsers);
     }
 
     private String validateUser(User user) {
@@ -60,45 +66,50 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String updateUsername(User currentUser, String newUsername) {
-        currentUser.setUsername(newUsername);
-        String validationError = validateUser(currentUser);
-        if (validationError != null) {
-            return validationError;
-        }
-        userRepository.updateUser(currentUser);
-        return null;
+        return SessionManager.executeInTransaction(session -> {
+            currentUser.setUsername(newUsername);
+            String validationError = validateUser(currentUser);
+            if (validationError != null) {
+                return validationError;
+            }
+            userRepository.updateUser(session, currentUser);
+            return null;
+        });
     }
 
     @Override
     public String updatePassword(User currentUser, String newPassword) {
-        String hashedPassword = PasswordEncoder.hashPassword(newPassword);
-        currentUser.setPassword(hashedPassword);
+        return SessionManager.executeInTransaction(session -> {
+            String hashedPassword = PasswordEncoder.hashPassword(newPassword);
+            currentUser.setPassword(hashedPassword);
 
-        String validationError = validateUser(currentUser);
-        if (validationError != null) {
-            return validationError;
-        }
-        userRepository.updateUser(currentUser);
-        return null;
+            String validationError = validateUser(currentUser);
+            if (validationError != null) {
+                return validationError;
+            }
+            userRepository.updateUser(session, currentUser);
+            return null;
+        });
     }
 
-    @Transactional
     @Override
     public String updateEmail(User currentUser, String newEmail) {
-        if (!isEmailUnique(currentUser, newEmail)) {
-            return "Email address already in use";
-        }
-        currentUser.setEmail(newEmail);
-        String validationError = validateUser(currentUser);
-        if (validationError != null) {
-            return validationError;
-        }
-        userRepository.updateUser(currentUser);
-        return null;
+       return SessionManager.executeInTransaction(session -> {
+            if (!isEmailUnique(session, currentUser, newEmail)) {
+                return "Email address already in use";
+            }
+            currentUser.setEmail(newEmail);
+            String validationError = validateUser(currentUser);
+            if (validationError != null) {
+                return validationError;
+            }
+            userRepository.updateUser(session, currentUser);
+            return null;
+        });
     }
 
-    private boolean isEmailUnique(User currentUser, String email) {
-        User userWithEmail = userRepository.getUserByEmail(email);
+    private boolean isEmailUnique(Session session, User currentUser, String email) {
+        User userWithEmail = userRepository.getUserByEmail(session, email);
         return userWithEmail == null || userWithEmail.getId().equals(currentUser.getId());
     }
 }

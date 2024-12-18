@@ -2,8 +2,25 @@ package org.example.transaction;
 
 import org.example.config.HibernateConfig;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 public class SessionManager {
+
+    public static <T> T executeInTransaction(SessionCallback<T> callback) {
+        Session session = HibernateConfig.getSessionFactory().openSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            T result = callback.doInSession(session);
+            transaction.commit();
+            return result;
+        } catch (Exception e) {
+            transaction.rollback();
+            e.printStackTrace();
+            throw e;
+        } finally {
+            session.close();
+        }
+    }
 
     public static <T> T executeReadOnly(SessionCallback<T> callback) {
         Session session = HibernateConfig.getSessionFactory().openSession();

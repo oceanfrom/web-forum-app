@@ -2,92 +2,78 @@ package org.example.repository.impl;
 
 import org.example.model.Topic;
 import org.example.repository.TopicRepository;
-import org.example.transaction.SessionManager;
+import org.hibernate.Session;
+
 import java.util.List;
 
 public class TopicRepositoryImpl implements TopicRepository {
 
     @Override
-    public List<Topic> searchByTitle(String title) {
-        return SessionManager.executeReadOnly(session -> {
-            return session.createQuery("SELECT t FROM Topic t WHERE LOWER(t.title) LIKE LOWER(:title)")
-                    .setParameter("title", "%" + title + "%")
-                    .getResultList();
-        });
+    public List<Topic> searchByTitle(Session session, String title) {
+        return session.createQuery("SELECT t FROM Topic t WHERE LOWER(t.title) LIKE LOWER(:title)")
+                .setParameter("title", "%" + title + "%")
+                .getResultList();
     }
 
     @Override
-    public void saveTopic(Topic topic) {
-        SessionManager.executeInTransactionWithoutReturn(session -> {
-            session.save(topic);
-        });
+    public void saveTopic(Session session, Topic topic) {
+        session.save(topic);
     }
 
     @Override
-    public void deleteTopicById(Long topicId) {
-        SessionManager.executeInTransactionWithoutReturn(session -> {
-            Topic topic = session.get(Topic.class, topicId);
-            if (topic == null)
-                return;
-            session.delete(topic);
-        });
+    public void deleteTopicById(Session session, Long topicId) {
+        Topic topic = session.get(Topic.class, topicId);
+        if (topic == null)
+            return;
+        session.delete(topic);
     }
 
     @Override
-    public List<Topic> getAllTopicsByLikes() {
-        return SessionManager.executeReadOnly(session -> {
-            return session.createQuery("SELECT t FROM Topic t ORDER BY t.likes DESC", Topic.class)
-                    .getResultList();
-        });
+    public List<Topic> getAllTopicsByLikes(Session session) {
+        return session.createQuery("SELECT t FROM Topic t ORDER BY t.likes DESC", Topic.class)
+                .getResultList();
     }
 
     @Override
-    public List<Topic> getAllTopicsByDislikes() {
-        return SessionManager.executeReadOnly(session -> {
-            return session.createQuery("SELECT t FROM Topic t ORDER BY t.dislikes DESC", Topic.class)
-                    .getResultList();
-        });
+    public List<Topic> getAllTopicsByDislikes(Session session) {
+        return session.createQuery("SELECT t FROM Topic t ORDER BY t.dislikes DESC", Topic.class)
+                .getResultList();
     }
 
     @Override
-    public List<Topic> getAllTopicsByCategoryId(Long categoryId) {
-        return SessionManager.executeReadOnly(session -> {
-            return session.createQuery(
-                            "SELECT t FROM Topic t WHERE t.category.id = :categoryId", Topic.class)
-                    .setParameter("categoryId", categoryId)
-                    .getResultList();
-        });
+    public List<Topic> getAllTopicsByCategoryId(Session session, Long categoryId) {
+        return session.createQuery(
+                        "SELECT t FROM Topic t WHERE t.category.id = :categoryId", Topic.class)
+                .setParameter("categoryId", categoryId)
+                .getResultList();
     }
 
     @Override
-    public List<Topic> getCreatedTopicsByUser(Long userId) {
-        return SessionManager.executeReadOnly(session -> {
-            return session.createQuery(
-                            "SELECT t FROM Topic t WHERE t.createdBy.id = :userId", Topic.class)
-                    .setParameter("userId", userId).getResultList();
-        });
+    public List<Topic> getCreatedTopicsByUser(Session session, Long userId) {
+        return session.createQuery(
+                        "SELECT t FROM Topic t WHERE t.createdBy.id = :userId", Topic.class)
+                .setParameter("userId", userId).
+                getResultList();
     }
 
     @Override
-    public List<Topic> getLikedTopicsByUser(Long userId) {
-        return SessionManager.executeReadOnly(session -> {
-            return session.createQuery(
-                            "SELECT t.topic FROM TopicRating t WHERE t.user.id = :userId AND t.like = true", Topic.class)
-                    .setParameter("userId", userId).getResultList();
-        });
+    public List<Topic> getLikedTopicsByUser(Session session, Long userId) {
+        return session.createQuery(
+                        "SELECT t.topic FROM TopicRating t WHERE t.user.id = :userId AND t.like = true", Topic.class)
+                .setParameter("userId", userId)
+                .getResultList();
     }
 
     @Override
-    public List<Topic> getAllTopics() {
-        return SessionManager.executeReadOnly(session -> {
-            return session.createQuery(
-                    "SELECT t FROM Topic t", Topic.class).getResultList();
-        });
+    public List<Topic> getAllTopics(Session session) {
+        return session.createQuery(
+                        "SELECT t FROM Topic t", Topic.class)
+                .getResultList();
     }
 
     @Override
-    public Topic getTopicById(Long id) {
-        return SessionManager.executeReadOnly(session -> session.get(Topic.class, id));
+    public Topic getTopicById(Session session, Long id) {
+        return session.get(Topic.class, id);
     }
 
 }

@@ -14,7 +14,7 @@ public interface NotificationService {
 
     void createLikeNotification(User createdBy, Topic topic);
 
-    void createCommentNotification(User createdBy, Topic topic, Comment comment);
+    void createCommentNotification(Session session, User createdBy, Topic topic, Comment comment);
 
     List<Notification> getUserNotifications(Long userId);
 }
