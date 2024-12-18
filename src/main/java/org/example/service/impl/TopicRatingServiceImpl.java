@@ -1,6 +1,7 @@
 package org.example.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.model.Notification;
 import org.example.model.Topic;
 import org.example.model.TopicRating;
 import org.example.model.User;
@@ -40,22 +41,38 @@ public class TopicRatingServiceImpl implements TopicRatingService {
     }
 
     private boolean processExistingRating(Session session, Topic topic, TopicRating existingRating, boolean isLike) {
+        boolean isNewLike = false;
         if (existingRating.isLike() == isLike) {
             session.delete(existingRating);
-            if (isLike)
+            if (isLike) {
                 changeTopicRating(topic, -1, 0);
-            else
+            } else {
                 changeTopicRating(topic, 0, -1);
-            return false;
+            }
+
+            Notification notification = notificationService.findNotificationForRating(session, topic, existingRating);
+            if (notification != null) {
+                session.delete(notification);
+            }
+
+            isNewLike = false;
         } else {
+            if (existingRating.isLike()) {
+                Notification notification = notificationService.findNotificationForRating(session, topic, existingRating);
+                if (notification != null) {
+                    session.delete(notification);
+                }
+                changeTopicRating(topic, -1, 1);
+            } else {
+                changeTopicRating(topic, 1, -1);
+            }
+
             existingRating.setLike(isLike);
             session.update(existingRating);
-            if (isLike)
-                changeTopicRating(topic, 1, -1);
-            else
-                changeTopicRating(topic, -1, 1);
-            return isLike;
+
+            isNewLike = isLike;
         }
+        return isNewLike;
     }
 
     private boolean addNewRating(Session session, Topic topic, User user, boolean isLike) {

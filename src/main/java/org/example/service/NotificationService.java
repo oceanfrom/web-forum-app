@@ -1,13 +1,13 @@
 package org.example.service;
 
-import org.example.model.Comment;
-import org.example.model.Notification;
-import org.example.model.Topic;
-import org.example.model.User;
+import org.example.model.*;
+import org.hibernate.Session;
 
 import java.util.List;
 
 public interface NotificationService {
+    Notification findNotificationForRating(Session session, Topic topic, TopicRating rating);
+
     void deleteAllNotifications();
 
     void deleteNotificationById(Long id);

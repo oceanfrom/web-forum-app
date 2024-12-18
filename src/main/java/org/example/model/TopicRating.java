@@ -23,5 +23,4 @@ public class TopicRating {
 
     @Column(name = "like_dislike")
     private boolean like;
-
 }

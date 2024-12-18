@@ -2,18 +2,22 @@ package org.example.service.impl;
 
 import org.example.factory.NotificationFactory;
 import org.example.factory.impl.NotificationFactoryImpl;
-import org.example.model.Comment;
-import org.example.model.Notification;
-import org.example.model.Topic;
-import org.example.model.User;
+import org.example.model.*;
 import org.example.repository.NotificationRepository;
 import org.example.repository.impl.NotificationRepositoryImpl;
 import org.example.service.NotificationService;
+import org.hibernate.Session;
+
 import java.util.List;
 
 public class NotificationServiceImpl implements NotificationService {
     private final NotificationRepository notificationRepository = new NotificationRepositoryImpl();
     private final NotificationFactory notificationFactory = new NotificationFactoryImpl();
+
+    @Override
+    public Notification findNotificationForRating(Session session, Topic topic, TopicRating rating) {
+        return notificationRepository.findNotificationForRating(session, topic, rating);
+    }
 
     @Override
     public void deleteAllNotifications() {

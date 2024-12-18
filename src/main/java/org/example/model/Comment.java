@@ -34,6 +34,9 @@ public class Comment {
     private int dislikes;
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommentRating> ratings;
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Notification> notifications;
 
     @PrePersist

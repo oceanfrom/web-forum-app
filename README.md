@@ -64,7 +64,7 @@ A modern web forum application built using **Java**, **PostgreSQL**, and **Thyme
 ### 7. Registration - **December 8, 2024** (done)
 - Implement user **registration** and authentication process.
 
-### 8. Search user, improve forum navigation - **December 10, 2024** (in process)
+### 8. Search user, improve forum navigation - **December 10, 2024** (done)
 - Add user search, improve the transition between pages
 ---
 
