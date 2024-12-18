@@ -10,7 +10,7 @@ import org.example.transaction.SessionManager;
 import org.hibernate.Session;
 
 public class CommentRatingServiceImpl implements CommentRatingService {
-    CommentRatingRepository commentRatingRepository = new CommentRatingRepositoryImpl();
+    private final CommentRatingRepository commentRatingRepository = new CommentRatingRepositoryImpl();
 
     @Override
     public void updateRating(Long commentId, User user, boolean isLike) {

@@ -17,7 +17,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository = new UserRepositoryImpl();
 
     ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-    private Validator validator = factory.getValidator();
+    private final Validator validator = factory.getValidator();
 
     @Override
     public List<User> searchByName(String username) {

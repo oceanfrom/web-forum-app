@@ -14,8 +14,8 @@ import org.hibernate.Session;
 
 @Slf4j
 public class TopicRatingServiceImpl implements TopicRatingService {
-    TopicRatingRepository topicRatingRepository = new TopicRatingRepositoryImpl();
-    NotificationService notificationService = new NotificationServiceImpl();
+    private final TopicRatingRepository topicRatingRepository = new TopicRatingRepositoryImpl();
+    private final NotificationService notificationService = new NotificationServiceImpl();
 
     @Override
     public void updateRating(Long topicId, User user, boolean isLike) {
