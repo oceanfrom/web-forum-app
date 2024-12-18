@@ -1,6 +1,8 @@
 package org.example.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.factory.TopicRatingFactory;
+import org.example.factory.impl.TopicRatingFactoryImpl;
 import org.example.model.Notification;
 import org.example.model.Topic;
 import org.example.model.TopicRating;
@@ -16,6 +18,7 @@ import org.hibernate.Session;
 public class TopicRatingServiceImpl implements TopicRatingService {
     private final TopicRatingRepository topicRatingRepository = new TopicRatingRepositoryImpl();
     private final NotificationService notificationService = new NotificationServiceImpl();
+    private final TopicRatingFactory topicRatingFactory = new TopicRatingFactoryImpl();
 
     @Override
     public void updateRating(Long topicId, User user, boolean isLike) {
@@ -42,44 +45,41 @@ public class TopicRatingServiceImpl implements TopicRatingService {
 
     private boolean processExistingRating(Session session, Topic topic, TopicRating existingRating, boolean isLike) {
         boolean isNewLike = false;
-        if (existingRating.isLike() == isLike) {
-            session.delete(existingRating);
-            if (isLike) {
-                changeTopicRating(topic, -1, 0);
-            } else {
-                changeTopicRating(topic, 0, -1);
-            }
+            if (existingRating.isLike() == isLike) {
+                session.delete(existingRating);
+                if (isLike) {
+                    changeTopicRating(topic, -1, 0);
+                } else {
+                    changeTopicRating(topic, 0, -1);
+                }
 
-            Notification notification = notificationService.findNotificationForRating(session, topic, existingRating);
-            if (notification != null) {
-                session.delete(notification);
-            }
-
-            isNewLike = false;
-        } else {
-            if (existingRating.isLike()) {
                 Notification notification = notificationService.findNotificationForRating(session, topic, existingRating);
                 if (notification != null) {
                     session.delete(notification);
                 }
-                changeTopicRating(topic, -1, 1);
+
+                isNewLike = false;
             } else {
-                changeTopicRating(topic, 1, -1);
+                if (existingRating.isLike()) {
+                    Notification notification = notificationService.findNotificationForRating(session, topic, existingRating);
+                    if (notification != null) {
+                        session.delete(notification);
+                    }
+                    changeTopicRating(topic, -1, 1);
+                } else {
+                    changeTopicRating(topic, 1, -1);
+                }
+
+                existingRating.setLike(isLike);
+                session.update(existingRating);
+
+                isNewLike = isLike;
             }
-
-            existingRating.setLike(isLike);
-            session.update(existingRating);
-
-            isNewLike = isLike;
+            return isNewLike;
         }
-        return isNewLike;
-    }
 
     private boolean addNewRating(Session session, Topic topic, User user, boolean isLike) {
-        TopicRating newRating = new TopicRating();
-        newRating.setUser(user);
-        newRating.setTopic(topic);
-        newRating.setLike(isLike);
+        TopicRating newRating = topicRatingFactory.createTopicRating(topic, user, isLike);
         session.save(newRating);
         if (isLike)
             changeTopicRating(topic, 1, 0);

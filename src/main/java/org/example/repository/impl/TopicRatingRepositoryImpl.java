@@ -11,6 +11,7 @@ public class TopicRatingRepositoryImpl implements TopicRatingRepository {
         return session.createQuery(
                         "SELECT t FROM TopicRating t WHERE t.user.id = :userId AND t.topic.id = :topicId", TopicRating.class)
                 .setParameter("userId", userId)
-                .setParameter("topicId", topicId).uniqueResult();
+                .setParameter("topicId", topicId)
+                .uniqueResult();
     }
 }

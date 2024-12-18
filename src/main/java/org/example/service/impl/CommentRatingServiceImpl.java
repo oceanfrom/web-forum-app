@@ -1,5 +1,7 @@
 package org.example.service.impl;
 
+import org.example.factory.CommentRatingFactory;
+import org.example.factory.impl.CommentRatingFactoryImpl;
 import org.example.model.Comment;
 import org.example.model.CommentRating;
 import org.example.model.User;
@@ -11,6 +13,7 @@ import org.hibernate.Session;
 
 public class CommentRatingServiceImpl implements CommentRatingService {
     private final CommentRatingRepository commentRatingRepository = new CommentRatingRepositoryImpl();
+    private final CommentRatingFactory commentRatingFactory = new CommentRatingFactoryImpl();
 
     @Override
     public void updateRating(Long commentId, User user, boolean isLike) {
@@ -47,10 +50,7 @@ public class CommentRatingServiceImpl implements CommentRatingService {
     }
 
     private void addNewRating(Session session, Comment comment, User user, boolean isLike) {
-        CommentRating newRating = new CommentRating();
-        newRating.setUser(user);
-        newRating.setComment(comment);
-        newRating.setLike(isLike);
+        CommentRating newRating = commentRatingFactory.createCommentRating(comment, user, isLike);
         session.save(newRating);
         if (isLike)
             changeCommentRating(comment, 1, 0);

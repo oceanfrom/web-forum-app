@@ -11,7 +11,6 @@ public class UserRepositoryImpl implements UserRepository {
     public List<User> searchByName(Session session, String username) {
         return session.createQuery("SELECT u FROM User u WHERE LOWER(u.username) LIKE LOWER(:username) ", User.class)
                 .setParameter("username", "%" + username + "%")
-
                 .getResultList();
     }
 
@@ -43,7 +42,8 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public List<User> getAllUsers(Session session) {
-        return session.createQuery("SELECT u FROM User u", User.class).getResultList();
+        return session.createQuery("SELECT u FROM User u", User.class)
+                .getResultList();
     }
 
     @Override
