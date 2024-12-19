@@ -16,6 +16,7 @@ public class NotificationRepositoryImpl implements NotificationRepository {
         return session.createQuery("FROM Notification n WHERE n.topic = :topic AND n.createdBy = :user", Notification.class)
                 .setParameter("topic", topic)
                 .setParameter("user", rating.getUser())
+                .setMaxResults(1)
                 .uniqueResult();
     }
 
